@@ -1,0 +1,61 @@
+Version 1.1    2013-12-6
+1，改善错误日志输出，增加Console日志输出域； 2013-11-22
+2，修改插件：OpenOffice文档转换JODConverter Visual，增加“目标文件名是否保留原始文件类型”及“是否作为文本处理”； 2013-11-24
+3，增加插件：Java类查找Class Finder，可查找文件夹下的.class及.java文件，以及文件夹下jar、zip中的.class及.java； 2013-12-2
+4，修复BUG：在Windows下对无权限访问文件夹进行listFiles()出现NullPointer异常，此时listFiles()==null，解决方法即对此做判断； 2013-12-4
+5，修复BUG：Ant脚本自动build插件Ant Script Auto Build，Project的Java Compiler未设置“Enable project specific settings”找不到文件“.settings/org.eclipse.jdt.core.prefs”； 2013-12-6
+6，完善插件：Java类查找Class Finder，可配置查找的文件类型（不限于.class及.java文件），压缩文件限于java.util.zip.ZipEntry类可解析的类型； 2013-12-26
+
+
+
+Version 1.03   2013-10-1
+1，修改JTextArea为自动换行，setLineWrap(true)；  2013-4-28
+2，完善插件文件(夹)查找操作(Folder And File Operate)的结果输出统计； 2013-4-30
+3，增加插件：中文简体繁体互转ZHConverter Visual； 2013-5-1
+4，将需要依赖第三方类包(除commons-codec-*.jar)的插件规划分配到类包bs.util.tool.commongui.plugins.more下。  2013-5-1
+5，URL.getPath()处理不了中文或带空格的路径，修改为URLDecoder.decode(path, "UTF-8")（"+"号decode后为空格" "，所以decode前使用"%2b"替换"+"号）； 2013-5-10
+6，插件编码转换Character Converter增加手动输入编码转换； 2013-8-8
+7，简化精炼属性配置及属性读取； 2013-8-8
+9，增加插件的关闭图标，位于插件title栏右侧，左侧是插件图标； 2013-8-8
+10，增加插件：文本编码识别JUniversal Chardet； 2013-8-9
+11，增加插件：计算文件数字签名File Digital Signature，支持计算大文件； 2013-8-10
+12，修改插件：文件(夹)查找操作(Folder And File Operate)，2013-9-25
+                    操作类型选择非查找操作的提示框需点击两次才关闭，改为点击一次确定即关闭，代码jComboBox.transferFocus()； 
+                    文件显示大小由显示M改增加选择项G、KB、Byte，默认M；
+                    重复文件查找方案优化为：取出有相同大小的所有文件，比较文件大小以及前2048Byte的内容的MD5值是否一样，如果两者相同，则认为重复，否则认为不重复，有较小的误差率；
+                    增加查找条件：文件/夹路径包含字符，文件/夹路径不包含字符；2013-9-29
+13，优化Windows下的启动，使用“start javaw”代替“java”命令以关闭悬停的CMD窗口，增加VM参数“-Xms48m”加快程序的启动；
+14，修改插件：编码转换：Character Converter，增加MD5加密的16位值输出(算法：取MD5值32位的第9到24个字符)；2013-9-26
+15，修改插件：Ant脚本自动build: Ant Script Auto Build，优化原jar任务为base + jar任务，base及jar任务默认选中(base任务为必选)；2013-9-26
+16，优化插件的异常输出以及提炼文件查找的重复代码；2013-9-30
+17，将插件文件(夹)变化监控JNotify Visual使用的类包由jnotify-0.93_improve-1.0.jar升级为jnotify-0.94_improve-1.0.jar；2013-9-30
+18，增加插件：OpenOffice文档转换JODConverter Visual；2013-10-1
+
+
+
+Version 1.02   2013-4-5
+
+1，将配置从类路径下移到与lib同级的conf目录下，将图标从类路径下移到与lib同级的img/icon目录下，方便修改；
+2，增加插件：Ant脚本自动build: Ant Script Auto Build，通过解析Eclipse的Java Project、Dynamic Web Project或者MyEclipse的Web Project的相关配置文件，
+                                自动构建者这三类Project的Ant脚本。
+
+
+
+Version 1.01   2013-3-26
+
+1，解决插件“编码转换：Character Converter”的二进制转换错误BUG，并增加八进制、十进制编码转换。   2013-3-23
+2，增加插件：文件(夹)变化监控：JNotify Visual，使用JNotify监控文件(夹)增删改及重命名。
+                                                                              注意：文件的剪切(move)操作，Windows下JNotify识别为删除操作，而Deepin 12.06(Linux其他版本待测试)却不识别。
+
+
+
+Version 1.0    2013-3-20
+
+Common Gui Tools是用java编写，GUI界面的实用小工具集，暂有6个小工具：
+
+1，编码转换：Character Converter 
+2，加密解密：Encrypt And Decrypt 
+3，正则表达式验证：Regex Tester
+4，执行Script脚本：Run Script
+5，文件(夹)查找操作：Folder And File Operate
+6，运行环境信息：System Information

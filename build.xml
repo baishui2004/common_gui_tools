@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project default="all" basedir=".">
+
+	<!-- properties属性配置文件 -->
+	<property file="build.properties" />
+
+	<!-- tstamp生成日期时间信息(依赖机器设置语言环境，中文环境下日期信息包含中文) -->
+	<tstamp>
+		<format property="build.date" pattern="EEEE, d MMMM yyyy" />
+		<format property="build.time" pattern="hh:mm a" />
+	</tstamp>
+
+	<!-- compile依赖classpath -->
+	<path id="classpath.compile">
+		<fileset dir="${dir.lib}" includes="*.jar" />
+		<fileset dir="${jodconverter.lib}" includes="*.jar" />
+	</path>
+
+	<!-- 初始任务 -->
+	<target name="init">
+		<mkdir dir="${dir.classes}" />
+		<echo message="Make dir '${dir.classes}' Success." />
+	</target>
+
+	<!-- 编译任务 -->
+	<target name="compile" depends="init" description="Compile Java Code">
+		<!-- includeantruntime="on"，解决：warning: 'includeantruntime' was not set(此警告并不影响Ant运行) -->
+		<!-- 当Ant编译时报错“警告：编码GBK的不可映射字符”(此警告将终止Ant运行)，解决：1，javac加属性encoding="UTF-8"(参见下1行末尾)；2，参见下2到4行 -->
+		<javac srcdir="${dir.src}" destdir="${dir.classes}" includes="${project.includes.java.sources}" includeantruntime="on" classpathref="classpath.compile" source="${project.compile.source}" target="${project.compile.target}" encoding="UTF-8">
+			<!-- 
+			<compilerarg line="-encoding UTF-8" />
+			-->
+		</javac>
+		<copydir src="${dir.src}" dest="${dir.classes}" includes="${project.includes.java.sources}" excludes="${project.excludes.java.sources},**/*.java">
+		</copydir>
+		<echo message="Compile Java Code Success(FilePath: ${dir.classes})." />
+	</target>
+
+	<!-- 打包JAR宏 -->
+	<macrodef name="jarMacrodef" description="Generate JAR file">
+		<attribute name="jarfile" />
+		<sequential>
+			<jar jarfile="@{jarfile}" basedir="${dir.classes}">
+				<manifest>
+					<attribute name="Main-Class" value="${project.main.class}" />
+					<!-- section换行并分组 -->
+					<section name="Specification">
+						<!-- 项目名称 -->
+						<attribute name="Specification-Title" value="${project.name}" />
+						<!-- 项目版本 -->
+						<attribute name="Specification-Version" value="${project.version}" />
+					</section>
+					<section name="Built">
+						<!-- 开发JDK版本 -->
+						<attribute name="Built-Compile-Source" value="${project.compile.source}" />
+						<!-- 编译JDK版本 -->
+						<attribute name="Built-Compile-Target" value="${project.compile.target}" />
+						<!-- 构建者 -->
+						<attribute name="Built-By" value="${build.author.name}" />
+						<!-- 构建时间 -->
+						<attribute name="Built-At" value="${build.date}, ${build.time}" />
+						<!-- 构建者邮箱 -->
+						<attribute name="Email" value="${build.author.email}" />
+					</section>
+				</manifest>
+			</jar>
+			<echo message="Generate JAR file Success(FilePath: @{jarfile})." />
+		</sequential>
+	</macrodef>
+
+	<!-- 打包源码JAR -->
+	<target name="jarSources" depends="init">
+		<copydir src="${dir.src}" dest="${dir.classes}" includes="${project.includes.java.sources}" excludes="${project.excludes.java.sources}">
+		</copydir>
+		<!-- 调用宏 -->
+		<jarMacrodef jarfile="${dir.dest}/${file.sourceJarfile}" />
+	</target>
+
+	<!--打包字节码JAR-->
+	<target name="jar">
+		<antcall target="clean" />
+		<antcall target="compile" />
+		<!-- 调用宏 -->
+		<jarMacrodef jarfile="${dir.dest}/${file.jarfile}" />
+	</target>
+
+	<!-- 打包ZIP任务 -->
+	<target name="zip" depends="jar" description="Generate ZIP file">
+		<mkdir dir="${dir.dest}/zip" />
+		<mkdir dir="${dir.dest}/zip/lib" />
+		<copyfile src="${dir.dest}/${file.jarfile}" dest="${dir.dest}/zip/lib/${file.jarfile}" />
+		<copydir src="${dir.lib}" dest="${dir.dest}/zip/lib/" />
+		<copydir src="${dir.conf}" dest="${dir.dest}/zip/conf/" />
+		<copydir src="${dir.img}" dest="${dir.dest}/zip/img/" />
+		<copyfile src="LICENSE" dest="${dir.dest}/zip/LICENSE" />
+		<copyfile src="notice.txt" dest="${dir.dest}/zip/notice.txt" />
+		<copyfile src="README.md" dest="${dir.dest}/zip/README.md" />
+		<copyfile src="release-notes.txt" dest="${dir.dest}/zip/release-notes.txt" />
+		<copyfile src="start.bat" dest="${dir.dest}/zip/start.bat" />
+		<copyfile src="start.sh" dest="${dir.dest}/zip/start.sh" />
+		<!--
+		<copyfile src="build.properties" dest="${dir.dest}/zip/ant/build.properties" />
+		<copyfile src="build.xml" dest="${dir.dest}/zip/ant/build.xml" />
+		-->
+		<zip destfile="${dir.dest}/${file.zipfile}">
+			<fileset dir="${dir.dest}/zip/" />
+		</zip>
+		<delete dir="${dir.dest}/zip" />
+		<delete dir="${dir.dest}/zip/lib" />
+	</target>
+
+	<!-- 清理任务 -->
+	<target name="clean">
+		<delete dir="${dir.classes}" />
+		<echo message="Delete dir '${dir.classes}' Success." />
+	</target>
+
+	<!-- 全部任务 -->
+	<target name="all" depends="clean, jarSources, jar, zip" />
+
+</project>

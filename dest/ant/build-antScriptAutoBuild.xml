@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project default="zip" basedir="./../../">
+
+	<!-- properties属性配置文件 -->
+	<property file="dest/ant/build.properties" />
+	
+	<!-- Project名称 -->
+	<property name="project.name">antScriptAutoBuild</property>
+	<!-- Project版本 -->
+	<property name="project.version">1.2</property>
+	<!-- Project入口程序 -->
+	<property name="project.main.class">bs.util.tool.ant.AntScriptAutoBuild</property>
+	<!-- 编译打包包括的源文件 -->
+	<property name="project.includes.java.sources">bs/util/web/tool/eclipse/*,bs/util/tool/ant/*</property>
+	<!-- 打包排除的源文件 -->
+	<property name="project.excludes.java.sources">**/package-info.java</property>
+
+	<!-- Filter替换任务属性值任务  简单方式 -->
+	<target name="filter">
+		<!--
+		<filter token="project.version" value="${project.version}" />
+		......
+		-->
+		<!-- copy, move等包含filtering属性 -->
+		<copy file="${properties.filter.file}" tofile="${properties.replaced.file}" filtering="true" encoding="UTF-8" outputencoding="UTF-8">
+		</copy>
+		<echo message="${project.name} properties replaced." />
+	</target>
+
+	<target name="jar" depends="filter">
+		<ant antfile="dest/ant/build_generateJar.xml" target="all" />
+	</target>
+
+	
+	
+	<!-- 资源及配置文件 -->
+	<property name="project.confAndResource">WebContent/WEB-INF/conf/AntScriptAutoBuild/</property>
+	<!-- 打包好的jar -->
+	<property name="file.jarfile">${project.name}-${project.version}.jar</property>
+	<!-- 打包好的zip -->
+	<property name="file.zipfile">${project.name}-${project.version}.zip</property>
+
+	<!-- 打包ZIP任务 -->
+	<target name="zip" depends="jar" description="Generate ZIP file">
+		<mkdir dir="${dir.dest}/zip" />
+		<mkdir dir="${dir.dest}/zip/lib" />
+		<copyfile src="${dir.dest}/${file.jarfile}" dest="${dir.dest}/zip/lib/${file.jarfile}" />
+		<copydir src="${project.confAndResource}" dest="${dir.dest}/zip/conf/AntScriptAutoBuild/" includes="**/*" excludes="readme.txt" />
+		<copyfile src="${project.confAndResource}/readme.txt" dest="${dir.dest}/zip/readme.txt" />
+		<zip destfile="${dir.dest}/${file.zipfile}">
+			<fileset dir="${dir.dest}/zip/" />
+		</zip>
+		<delete dir="${dir.dest}/zip" />
+		<delete dir="${dir.dest}/zip/lib" />
+	</target>
+
+</project>
