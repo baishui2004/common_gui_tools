@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -149,7 +150,7 @@ public class RegexTester extends GuiJPanel {
 		JPanel actionPanel = new JPanel(new BorderLayout());
 		add(actionPanel, BorderLayout.EAST);
 		// 放置多选框等
-		JPanel actionGridPanel = new JPanel(new GridLayout(15, 1));
+		JPanel actionGridPanel = new JPanel(new GridLayout(10, 1));
 		actionPanel.add(actionGridPanel, BorderLayout.NORTH);
 
 		// 放置帮助按钮
@@ -162,9 +163,27 @@ public class RegexTester extends GuiJPanel {
 		});
 		actionGridPanel.add(helpButtonPanel);
 
-		// 仅作填充
-		actionGridPanel.add(new Panel());
+		if (expNames != null && expNames.length != 0) {
+			// 仅作填充
+			actionGridPanel.add(new JLabel(""));
 
+			// 常用正则表达式下拉框
+			JPanel expressionsBoxPanel = new JPanel(new BorderLayout());
+			addJLabel(expressionsBoxPanel, "  ", GuiUtils.font14_cn, BorderLayout.WEST);
+			addJComboBox(expressionsBoxPanel, expNames, GuiUtils.font13_cn, new ActionListener() {
+				public void actionPerformed(ActionEvent event) {
+					String exp = expsMap.get(((JComboBox) event.getSource()).getSelectedItem().toString());
+					if (exp != null) {
+						regexTextArea.setText(exp);
+					}
+				}
+			}, BorderLayout.CENTER);
+			actionGridPanel.add(expressionsBoxPanel);
+		}
+
+		// 仅作填充
+		actionGridPanel.add(new JLabel(""));
+		
 		// 是否忽略大小写
 		JPanel ignoreCasePanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		addJCheckBox(ignoreCasePanel, "忽略大小写", false, GuiUtils.font14_cn, new ActionListener() {
@@ -185,7 +204,7 @@ public class RegexTester extends GuiJPanel {
 		actionGridPanel.add(viewDetailPanel);
 
 		// 仅作填充
-		actionGridPanel.add(new Panel());
+		actionGridPanel.add(new JLabel(""));
 
 		// 替换匹配
 		JPanel replaceLabelPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
@@ -195,24 +214,6 @@ public class RegexTester extends GuiJPanel {
 		addJLabel(replaceTextPanel, "  ", GuiUtils.font14_cn, BorderLayout.WEST);
 		addJTextField(replaceTextPanel, replaceTextField, GuiUtils.font14_un, BorderLayout.CENTER);
 		actionGridPanel.add(replaceTextPanel);
-
-		if (expNames != null && expNames.length != 0) {
-			// 仅作填充
-			actionGridPanel.add(new Panel());
-
-			// 常用正则表达式下拉框
-			JPanel expressionsBoxPanel = new JPanel(new BorderLayout());
-			addJLabel(expressionsBoxPanel, "  ", GuiUtils.font14_cn, BorderLayout.WEST);
-			addJComboBox(expressionsBoxPanel, expNames, GuiUtils.font13_cn, new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					String exp = expsMap.get(((JComboBox) event.getSource()).getSelectedItem().toString());
-					if (exp != null) {
-						regexTextArea.setText(exp);
-					}
-				}
-			}, BorderLayout.CENTER);
-			actionGridPanel.add(expressionsBoxPanel);
-		}
 
 		// 仅作填充
 		actionPanel.add(new Panel(), BorderLayout.CENTER);

@@ -34,5 +34,5 @@
     	<echo message="Yuicompressor compress css files Success(FilePath: ${dir.yuicompressor.compress.css})." />
     </target>
     
-    <!-- JSch任务 -->
+    <!-- YUI Compressor任务 -->
 	<target name="yuicompressor" depends="js.compress, css.compress" />
