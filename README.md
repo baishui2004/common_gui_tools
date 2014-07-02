@@ -1,7 +1,7 @@
 Common Gui Tools
 ================
 
-Common Gui Tools 是用java编写，GUI界面的实用小工具集，1.1版有13个小工具： 
+<a href="https://github.com/baishui2004/common_gui_tools" target="_blank">Common Gui Tools</a> 是用java编写，GUI界面的实用小工具集，1.1版有13个小工具： 
 
 <pre>
 <br /><b>1</b>，编码转换：Character Converter 
@@ -37,6 +37,7 @@ Common Gui Tools 是用java编写，GUI界面的实用小工具集，1.1版有13
 
 
 <br /><br /><b>下面逐个简单简绍每个小工具：</b> 打开软件后可通过菜单栏Tools、More Tools选择工具显示，通过各工具的关闭按钮或菜单栏再次点击工具关闭显示。
+<br />
 <br /><b>1，编码转换：Character Converter</b>
 <br />(1)，编码：Encode String表单输入字符，点击右侧对应的Encode按钮，对输入字符进行编码，注意此时的编码类别是“二进制”、“八进制”、“十进制”、“十六进制”。对应的可以使用下面的Decode进行解码。
 <br />
@@ -55,7 +56,7 @@ Common Gui Tools 是用java编写，GUI界面的实用小工具集，1.1版有13
 <br />
 ![File Digital Signature](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/File%20Digital%20Signature.png)
 
-<b>4，正则表达式验证：Regex Tester</b>    
+<b>4，正则表达式验证：Regex Tester</b> 
 <br />常用正则表达式文件conf\RegexTester\expression.properties。
 <br />
 ![Regex Tester](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Regex%20Tester.png)

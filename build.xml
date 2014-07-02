@@ -95,6 +95,7 @@
 		<copyfile src="LICENSE" dest="${dir.dest}/zip/LICENSE" />
 		<copyfile src="notice.txt" dest="${dir.dest}/zip/notice.txt" />
 		<copyfile src="README.md" dest="${dir.dest}/zip/README.md" />
+		<copyfile src="README.md.pdf" dest="${dir.dest}/zip/README.md.pdf" />
 		<copyfile src="release-notes.txt" dest="${dir.dest}/zip/release-notes.txt" />
 		<copyfile src="start.bat" dest="${dir.dest}/zip/start.bat" />
 		<copyfile src="start.sh" dest="${dir.dest}/zip/start.sh" />
