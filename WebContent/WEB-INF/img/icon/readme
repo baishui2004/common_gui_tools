@@ -29,6 +29,8 @@ cgt_JNotifyVisual.png           open_icon_library\16x16 png\places\intrigue-styl
 cgt_JUniversalChardet.png       open_icon_library\16x16 png\status\virus-detected.png
 cgt_ZHConverterVisual.png       open_icon_library\16x16 png\intl\round-icons\flag-cn.png
 
+cgt_ShortURL.png                open_icon_library\16x16 png\devices\network-wireless-transmit_edit.png
+
 
 帮助图标：
 cgt_Font.png                    open_icon_library\16x16 png\actions\font.png

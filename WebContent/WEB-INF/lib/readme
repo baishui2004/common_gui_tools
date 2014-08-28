@@ -15,3 +15,9 @@ Jar类包使用说明：
 
 5, ZHConverter.jar                 插件ZHConverter Visual类bs.util.tool.commongui.plugins.more.ZHConverterVisual.java
                                                                                              类包来源：https://code.google.com/p/java-zhconverter/
+
+6, commons-httpclient-3.1.jar      插件Short URL类bs.util.tool.commongui.plugins.network.ShortURL.java
+                                                                                             类包来源：http://hc.apache.org/
+
+7, commons-logging-1.1.1.jar       插件Short URL类bs.util.tool.commongui.plugins.network.ShortURL.java
+                                                                                             类包来源：http://commons.apache.org/proper/commons-logging/

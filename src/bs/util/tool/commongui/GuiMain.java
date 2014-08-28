@@ -56,6 +56,11 @@ public class GuiMain extends JFrame {
 	 * GUI配置属性Map(更多工具).
 	 */
 	private static Map<String, String> more_propsMap;
+	
+	/**
+	 * GUI配置属性Map(网络工具).
+	 */
+	private static Map<String, String> network_propsMap;
 
 	/**
 	 * 常用插件ID.
@@ -83,7 +88,10 @@ public class GuiMain extends JFrame {
 							.getActualPath("conf/common_gui_tools.properties"));
 					more_propsMap = PropertiesUtils.getPropertiesMap(GuiUtils
 							.getActualPath("conf/more_tools.properties"));
+					network_propsMap = PropertiesUtils.getPropertiesMap(GuiUtils
+							.getActualPath("conf/network_tools.properties"));
 					propsMap.putAll(more_propsMap);
+					propsMap.putAll(network_propsMap);
 					commonUsePlugins = propsMap.get("CommonUseTools");
 					gui_width = Integer.parseInt(propsMap.get("GUIWidth"));
 
@@ -250,6 +258,9 @@ public class GuiMain extends JFrame {
 
 		JMenu more_toolsMenu = new JMenu(" More Tools ");
 		menuBar.add(more_toolsMenu); // 更多工具菜单
+		
+		JMenu network_toolsMenu = new JMenu(" NetWork Tools ");
+		menuBar.add(network_toolsMenu); // 网络工具菜单
 
 		JMenu helpMenu = new JMenu(" Help ");
 		menuBar.add(helpMenu); // Help菜单
@@ -325,6 +336,7 @@ public class GuiMain extends JFrame {
 
 			// 插件属性，按ID升序排列
 			int moreTools_cnt = more_propsMap.size();
+			int networkTools_cnt = network_propsMap.size();
 			for (int i = 0; i < pluginSortAndNames.size(); i++) {
 				String key = pluginSortAndNames.get(i);
 				List<String> pluginProps = new ArrayList<String>();
@@ -378,11 +390,17 @@ public class GuiMain extends JFrame {
 					// 设置菜单
 					JMenuItem toolItem = new JMenuItem(pluginName); // 二级菜单
 					toolItem.setName(Integer.toString(pluginId));
-					if (pluginId > 50 && pluginId < 99) {
+					if (pluginId > 50 && pluginId < 71) {
 						more_toolsMenu.add(toolItem);
 						moreTools_cnt--;
 						if (moreTools_cnt > 0) {
 							more_toolsMenu.addSeparator(); // 分隔符
+						}
+					} else if (pluginId > 70 && pluginId < 99) {
+						network_toolsMenu.add(toolItem);
+						networkTools_cnt--;
+						if (networkTools_cnt > 0) {
+							network_toolsMenu.addSeparator(); // 分隔符
 						}
 					} else {
 						toolsMenu.add(toolItem);

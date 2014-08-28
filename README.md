@@ -1,7 +1,7 @@
-Common Gui Tools
-================
+Java GUI实用小工具集 Common Gui Tools
+=====================================
 
-<a href="https://github.com/baishui2004/common_gui_tools" target="_blank">Common Gui Tools</a> 是用java编写，GUI界面的实用小工具集，1.1版有13个小工具： 
+<a href="https://github.com/baishui2004/common_gui_tools" target="_blank">Common Gui Tools</a> 是用java编写，GUI界面的实用小工具集，1.2版有17个小工具： 
 
 <pre>
 <br /><b>1</b>，编码转换：Character Converter 
@@ -23,7 +23,8 @@ Common Gui Tools
 
 
 <br /><b>下载及使用说明：</b> 
-<br />下载压缩包<a href="https://github.com/baishui2004/common_gui_tools/blob/master/dest/common_gui_tools-1.1.zip?raw=true">common_gui_tools-1.1.zip</a>，解压，Windows下使用start.bat运行，Linux下使用start.sh运行。
+<br />下载压缩包<a href="https://github.com/baishui2004/common_gui_tools/blob/master/dest/common_gui_tools-1.2.zip?raw=true">common_gui_tools-1.2.zip</a>，解压，Windows下使用start.bat运行，Linux下使用start.sh运行。
+<!-- more -->
 
 <br /><b>配置说明：</b> 
 <pre>
