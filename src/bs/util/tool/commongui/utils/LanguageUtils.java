@@ -23,9 +23,9 @@ public class LanguageUtils {
 	public static final String CONST_XML = "XML";
 
 	/**
-	 * JAVASCRIPT.
+	 * JavaScript.
 	 */
-	public static final String CONST_JAVASCRIPT = "JAVASCRIPT";
+	public static final String CONST_JavaScript = "JavaScript";
 
 	/**
 	 * URI.

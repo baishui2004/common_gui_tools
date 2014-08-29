@@ -1,5 +1,6 @@
 package bs.util.tool.commongui;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -215,6 +216,25 @@ public abstract class GuiJPanel extends JPanel {
 	 */
 	public void showMessage(String message, String title, int type) {
 		JOptionPane.showMessageDialog(this, message, title, type);
+	}
+
+	/**
+	 * 消息提示.
+	 */
+	public void showTextAreaMessage(String message, String title, int type, Font font, Color background) {
+		JTextArea textArea = new JTextArea(message);
+		if (font == null) {
+			textArea.setFont(GuiUtils.font14_un);
+		} else {
+			textArea.setFont(font);
+		}
+		textArea.setEditable(false);
+		if (background == null) {
+			textArea.setBackground(new Color(214, 217, 223));
+		} else {
+			textArea.setBackground(background);
+		}
+		JOptionPane.showMessageDialog(this, textArea, title, type);
 	}
 
 	/**

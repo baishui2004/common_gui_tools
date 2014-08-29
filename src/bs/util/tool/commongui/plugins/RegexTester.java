@@ -158,7 +158,7 @@ public class RegexTester extends GuiJPanel {
 		helpButtonPanel.add(new Panel());// 仅作填充
 		addJButton(helpButtonPanel, "帮助", "", GuiUtils.font13_cn, new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				showMessage(helpText, "帮助", JOptionPane.INFORMATION_MESSAGE);
+				showTextAreaMessage(helpText, "帮助", JOptionPane.INFORMATION_MESSAGE, null, null);
 			}
 		});
 		actionGridPanel.add(helpButtonPanel);

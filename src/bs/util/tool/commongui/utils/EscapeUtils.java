@@ -20,7 +20,7 @@ public class EscapeUtils {
 			unescape = StringEscapeUtils.escapeSql(string);
 		} else if (type.equals(LanguageUtils.CONST_JAVA)) {
 			unescape = StringEscapeUtils.escapeJava(string);
-		} else if (type.equals(LanguageUtils.CONST_JAVASCRIPT)) {
+		} else if (type.equals(LanguageUtils.CONST_JavaScript)) {
 			unescape = StringEscapeUtils.escapeJavaScript(string);
 		} else if (type.equals(LanguageUtils.CONST_CSV)) {
 			unescape = StringEscapeUtils.escapeCsv(string);
@@ -44,7 +44,7 @@ public class EscapeUtils {
 			escape = type + "转义字符不能进行还原";
 		} else if (type.equals(LanguageUtils.CONST_JAVA)) {
 			escape = StringEscapeUtils.unescapeJava(string);
-		} else if (type.equals(LanguageUtils.CONST_JAVASCRIPT)) {
+		} else if (type.equals(LanguageUtils.CONST_JavaScript)) {
 			escape = StringEscapeUtils.unescapeJavaScript(string);
 		} else if (type.equals(LanguageUtils.CONST_CSV)) {
 			escape = StringEscapeUtils.unescapeCsv(string);

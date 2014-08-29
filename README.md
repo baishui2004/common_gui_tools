@@ -131,7 +131,7 @@ Java GUI实用小工具集 Common Gui Tools
 <br />项目：<a href="http://code.google.com/p/java-zhconverter/" target="_blank">java-zhconverter</a>
 
 <b>15，<a id="Escape Character Tool">字符转义工具：Escape Character Tool</a></b>
-<br />HTML、XML、SQL、JAVA、JAVASCRIPT、CSV字符转义字符及还原，使用Apache Commons-lang的StringEscapeUtils类。
+<br />HTML、XML、JAVA、JavaScript、CSV字符转义字符及还原，使用Apache Commons-lang的StringEscapeUtils类。
 <br />
 ![Escape Character Tool](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Escape%20Character%20Tool.png)
 
