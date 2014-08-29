@@ -59,14 +59,9 @@ public class ShortURL extends GuiJPanel {
 	 */
 	private JButton revertButton;
 
-	/**
-	 * 空白文本域.
-	 */
-	private JTextArea resultTextArea = createJTextArea(GuiUtils.font14_un);
-
 	public ShortURL() {
 
-		// 主面板：边界布局，分North、Center两部分，North用于放置输入及条件控件，Center是放置结果输出
+		// 主面板：边界布局，分North、Center两部分，North用于放置输入及条件控件，Center是放置空面面板
 		setLayout(new BorderLayout());
 
 		// 输入及条件Panel
@@ -191,6 +186,8 @@ public class ShortURL extends GuiJPanel {
 
 		// 空面面板
 		JPanel resultPanel = new JPanel(new BorderLayout());
+		// 空白文本域
+		JTextArea resultTextArea = createJTextArea(GuiUtils.font14_un);
 		resultTextArea.setEditable(false);
 		resultTextArea.setText("说明：" + "\n1，百度短网址API：http://www.baidu.com/search/dwz.html"
 				+ "\n2，新浪短网址API：新浪短网址http://t.cn/需要授权才可使用，此处转换中不列出，详细API说明如下："

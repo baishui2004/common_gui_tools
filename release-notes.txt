@@ -1,5 +1,7 @@
 Version 1.2    2014-8-28
 1，增加插件：短网址转换Short URL； 2014-8-28
+2，增加插件：颜色工具Color Tool； 2014-8-29
+3，增加插件：字符转义工具Escape Character Tool； 2014-8-29
 
 
 

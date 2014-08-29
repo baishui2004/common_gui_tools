@@ -22,6 +22,8 @@ cgt_RunScript.png               open_icon_library\16x16 png\actions\bug-edit.png
 cgt_FolderAndFileOperate.png    open_icon_library\16x16 png\places\folder-explore.png
 cgt_AntScriptAutoBuild.png      open_icon_library\16x16 png\actions\script-code.png
 cgt_ClassFinder.png             open_icon_library\16x16 png\actions\edit-find-6.png
+cgt_ColorTool.png               open_icon_library\16x16 png\apps\preferences-desktop-color.png
+cgt_EscapeCharacterTool.png     open_icon_library\16x16 png\apps\accessories-character-map.png
 cgt_SystemInformation.png       open_icon_library\16x16 png\apps\utilities-system-monitor.png
 
 cgt_JODConverterVisual.png      open_icon_library\16x16 png\apps\openoffice.org.png

@@ -242,7 +242,7 @@ public class GuiMain extends JFrame {
 		msgPanel.add(msgButtonPanel, BorderLayout.EAST);
 		add(msgPanel, BorderLayout.SOUTH);
 		
-		JMenu fileMenu = new JMenu(" File ");
+		JMenu fileMenu = new JMenu("  File  ");
 		menuBar.add(fileMenu); // File菜单
 		JMenuItem exitItem = new JMenuItem("Exit"); // 二级菜单
 		exitItem.setIcon(GuiUtils.getIcon("img/icon/cgt_Exit.png", kit));
@@ -253,16 +253,16 @@ public class GuiMain extends JFrame {
 			}
 		});
 
-		JMenu toolsMenu = new JMenu(" Tools ");
+		JMenu toolsMenu = new JMenu("  Tools  ");
 		menuBar.add(toolsMenu); // 工具菜单
 
-		JMenu more_toolsMenu = new JMenu(" More Tools ");
+		JMenu more_toolsMenu = new JMenu("  More Tools  ");
 		menuBar.add(more_toolsMenu); // 更多工具菜单
 		
-		JMenu network_toolsMenu = new JMenu(" NetWork Tools ");
+		JMenu network_toolsMenu = new JMenu("  NetWork Tools  ");
 		menuBar.add(network_toolsMenu); // 网络工具菜单
 
-		JMenu helpMenu = new JMenu(" Help ");
+		JMenu helpMenu = new JMenu("  Help  ");
 		menuBar.add(helpMenu); // Help菜单
 		JMenuItem fontItem = new JMenuItem("Font"); // 二级菜单
 		fontItem.setIcon(GuiUtils.getIcon("img/icon/cgt_Font.png", kit));

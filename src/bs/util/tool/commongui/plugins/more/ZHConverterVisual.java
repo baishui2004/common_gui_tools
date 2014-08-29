@@ -35,7 +35,7 @@ public class ZHConverterVisual extends GuiJPanel {
 	public ZHConverterVisual() {
 		// 边界布局
 		setLayout(new BorderLayout());
-		// Center，脚本及结果输入输出域，使用2行1列的Grid布局，使其平均显示
+		// Center，文字及转换结果输入输出域，使用2行1列的Grid布局，使其平均显示
 		JPanel textAreaPanel = new JPanel(new GridLayout(2, 1));
 		add(textAreaPanel, BorderLayout.CENTER);
 
