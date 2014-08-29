@@ -27,7 +27,7 @@ Java GUI实用小工具集 Common Gui Tools
 
 <br /><b>下载及使用说明：</b>
 <br />Require Java 6.0+
-<br />下载压缩包<a href="https://github.com/baishui2004/common_gui_tools/blob/master/dest/common_gui_tools-1.2.zip?raw=true">common_gui_tools-1.2.zip</a>，解压，Windows下，<a href="#">用start.bat运行，Linux下使用start.sh运行。
+<br />下载压缩包<a href="https://github.com/baishui2004/common_gui_tools/blob/master/dest/common_gui_tools-1.2.zip?raw=true">common_gui_tools-1.2.zip</a>，解压，Windows下，用start.bat运行，Linux下使用start.sh运行。
 <!-- more -->
 
 <br /><b>配置说明：</b> 
