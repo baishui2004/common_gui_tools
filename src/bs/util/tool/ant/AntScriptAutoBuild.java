@@ -24,7 +24,7 @@ import bs.util.web.tool.eclipse.ProjectPropertiesDealInterface;
 /**
  * Ant Script Auto Build.
  * 
- * @author baishui2004
+ * @author Baishui2004
  * @version 1.1
  * @date 2013-4-5
  */

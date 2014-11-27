@@ -8,6 +8,7 @@ import bs.util.tool.commongui.GuiUtils;
 public class SearchFileAndFolderNamePathParams {
 
 	public Boolean type_repeatSearch;
+	public Boolean type_sameNameSearch;
 	public Boolean type_blankSearch;
 	public String fileType;
 	public boolean containsFile;
@@ -37,6 +38,7 @@ public class SearchFileAndFolderNamePathParams {
 
 	public SearchFileAndFolderNamePathParams(Map<String, Object> paramsMap) {
 		type_repeatSearch = Boolean.parseBoolean(GuiUtils.toString(paramsMap.get("type_repeatSearch")));
+		type_sameNameSearch = Boolean.parseBoolean(GuiUtils.toString(paramsMap.get("type_sameNameSearch")));
 		type_blankSearch = Boolean.parseBoolean(GuiUtils.toString(paramsMap.get("type_blankSearch")));
 		fileType = GuiUtils.toString(paramsMap.get("searchFileType"));
 		containsFile = GuiUtils.parseFalse(paramsMap.get("containsFile"));

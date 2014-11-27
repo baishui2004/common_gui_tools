@@ -7,7 +7,7 @@ import javax.swing.JTextArea;
 /**
  * Eclipse Project Properties Deal Interface.
  * 
- * @author baishui2004
+ * @author Baishui2004
  * @version 1.1
  * @date 2013-4-5
  */

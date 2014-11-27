@@ -59,13 +59,17 @@ public class FolderAndFileOperate extends GuiJPanel {
 	 */
 	private final String type_repeatSearch = "重复文件查找";
 	/**
+	 * 查找类型-同名文件查找.
+	 */
+	private final String type_sameNameSearch = "同名文件查找";
+	/**
 	 * 查找类型-空文件(夹)查找.
 	 */
 	private final String type_blankSearch = "空文件(夹)查找";
 	/**
 	 * 查找类型.
 	 */
-	private final String[] types = new String[] { type_search, type_repeatSearch, type_blankSearch };
+	private final String[] types = new String[] { type_search, type_repeatSearch, type_sameNameSearch, type_blankSearch };
 	/**
 	 * 当前查找类型.
 	 */
@@ -309,6 +313,10 @@ public class FolderAndFileOperate extends GuiJPanel {
 					FileUtils.sameSizeFilesMap = new HashMap<String, List<File>>();
 					FileUtils.repeatFilesMap = new HashMap<String, List<File>>();
 					FileUtils.repeatFilesProp = new LinkedHashSet<String>();
+				} else if (curType.equals(type_sameNameSearch)) {
+					paramsMap.put("type_sameNameSearch", true);
+					FileUtils.sameNameFilesMap = new HashMap<String, List<File>>();
+					FileUtils.sameNameFilesProp = new LinkedHashSet<String>();
 				} else if (curType.equals(type_blankSearch)) {
 					paramsMap.put("type_blankSearch", true);
 				}
@@ -360,6 +368,27 @@ public class FolderAndFileOperate extends GuiJPanel {
 					FileUtils.repeatFilesMap = null;
 					FileUtils.repeatFilesProp.clear();
 					FileUtils.repeatFilesProp = null;
+				} else if (curType.equals(type_sameNameSearch)) {
+					List<File> sameNameFiles = null;
+					long cnt = 0;
+					int groupCnt = FileUtils.sameNameFilesProp.size();
+					int size_cnt = 0;
+					int f = 0;
+					resultTextArea.append("查找方法：比较文件名，不比较后缀名，查找相同文件名称的文件。\n\n\n");
+					for (String prop : FileUtils.sameNameFilesProp) {
+						resultTextArea.append("第" + (++f) + "组：\n");
+						sameNameFiles = FileUtils.sameNameFilesMap.get(prop);
+						cnt += sameNameFiles.size();
+						Integer[] cntArr = printPropAndAction(curAction, sameNameFiles);
+						cnt_action += cntArr[0];
+						size_cnt += cntArr[5];
+					}
+					resultTextArea.append("\n\nCount same name group: " + groupCnt + ", files: " + cnt + ", Size: "
+							+ size_cnt + "M");
+					FileUtils.sameNameFilesMap.clear();
+					FileUtils.sameNameFilesMap = null;
+					FileUtils.sameNameFilesProp.clear();
+					FileUtils.sameNameFilesProp = null;
 				} else {
 					Integer[] cntArr = printPropAndAction(curAction, files);
 					cnt_action += cntArr[0];

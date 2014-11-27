@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * 读取属性文件属性.
  *
- * @author baishui2004
+ * @author Baishui2004
  * @version 1.0
  */
 public class PropertiesUtils {

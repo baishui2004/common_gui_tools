@@ -18,7 +18,7 @@ import javax.xml.stream.XMLStreamReader;
 /**
  * Eclipse Project Properties Deal.
  * 
- * @author baishui2004
+ * @author Baishui2004
  * @version 1.1
  * @date 2013-4-5
  */

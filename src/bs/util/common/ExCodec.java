@@ -14,7 +14,7 @@ import org.apache.commons.codec.net.URLCodec;
  * bs.util.common.ExCodeC.
  * CodeC for apache common codec.
  *
- * @author baishui2004
+ * @author Baishui2004
  * @version 1.1
  */
 public final class ExCodec {

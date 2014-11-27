@@ -41,6 +41,24 @@ public final class FileUtils {
 	 * </pre>
 	 */
 	public static Set<String> repeatFilesProp;
+	
+	/**
+	 * 同名文件查找时用的Map.
+	 * 
+	 * <pre>
+	 * key的格式："文件名".
+	 * </pre>
+	 */
+	public static Map<String, List<File>> sameNameFilesMap;
+	/**
+	 * 同名文件查找时用的Set.
+	 * 
+	 * <pre>
+	 * 元素String的格式："文件名".
+	 * 判断sameNameFilesMap的value List<File>.size()>1，则加入sameNameFilesProp中.
+	 * </pre>
+	 */
+	public static Set<String> sameNameFilesProp;
 
 	/**
 	 * 迭代获取文件夹目录下所有文件(夹).
@@ -80,6 +98,13 @@ public final class FileUtils {
 					} catch (IOException e) {
 						GuiUtils.log(e);
 					}
+				}
+			}
+		} else if (searchFileAndFolderNamePathParams.type_sameNameSearch) { // 同名文件查找
+			for (String fileName : sameNameFilesMap.keySet()) {
+				List<File> sameFiles = sameNameFilesMap.get(fileName);
+				if (sameFiles.size() > 1) {
+					sameNameFilesProp.add(fileName);
 				}
 			}
 		}
@@ -222,7 +247,7 @@ public final class FileUtils {
 		}
 		if (ifAdd) {
 			if (isDir) {
-				if (!sps.type_repeatSearch) {
+				if (!sps.type_repeatSearch && !sps.type_sameNameSearch) {
 					// 文件夹路径包含(不包含)字符
 					ifAdd = ifMatchText(file.getAbsolutePath(), sps.folderPathCsText, sps.folderPathNCsText,
 							sps.folderPathSRegex, sps.folderPathCsPattern, sps.folderPathNCsPattern);
@@ -239,21 +264,31 @@ public final class FileUtils {
 						ifAdd = ifMatchText(fileName, sps.fileNameCsText, sps.fileNameNCsText, sps.fileNameSRegex,
 								sps.fileNameCsPattern, sps.fileNameNCsPattern); // 比较名称/路径是否匹配
 					}
-					// 重复文件查找 先找到大小相同的文件
-					if (ifAdd && sps.type_repeatSearch) {
-						String prop = Long.toString(fileSize);
-						List<File> sameSizeFiles = sameSizeFilesMap.get(prop);
-						if (sameSizeFiles == null) {
-							sameSizeFiles = new ArrayList<File>();
-							sameSizeFilesMap.put(prop, sameSizeFiles);
+					if (ifAdd) {
+						if (sps.type_repeatSearch) { // 重复文件查找 先找到大小相同的文件
+							String prop = Long.toString(fileSize);
+							List<File> sameSizeFiles = sameSizeFilesMap.get(prop);
+							if (sameSizeFiles == null) {
+								sameSizeFiles = new ArrayList<File>();
+								sameSizeFilesMap.put(prop, sameSizeFiles);
+							}
+							sameSizeFiles.add(file);
+						} else if (sps.type_sameNameSearch) { // 重复文件查找 先找到大小相同的文件
+							String prop = fileName.substring(0, fileName.length() - fileType.length() - 1);
+							List<File> sameNameFiles = sameNameFilesMap.get(prop);
+							if (sameNameFiles == null) {
+								sameNameFiles = new ArrayList<File>();
+								sameNameFilesMap.put(prop, sameNameFiles);
+							}
+							sameNameFiles.add(file);
 						}
-						sameSizeFiles.add(file);
 					}
 				}
 			}
 		}
 		// 当查找类型为'重复文件查找'，files最后长度为0，结果保存在FileUtils.repeatFilesProp及FileUtils.repeatFilesMap中
-		if (ifAdd && !sps.type_repeatSearch) {
+		// 当查找类型为'同名文件查找'，files最后长度为0，结果保存在FileUtils.sameNameFilesProp及FileUtils.sameNameFilesMap中
+		if (ifAdd && !sps.type_repeatSearch && !sps.type_sameNameSearch) {
 			fileList.add(file);
 		}
 	}

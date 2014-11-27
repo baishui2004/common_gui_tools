@@ -1,7 +1,7 @@
 Java GUI实用小工具集 Common Gui Tools
 =====================================
 
-<a href="https://github.com/baishui2004/common_gui_tools" target="_blank">Common Gui Tools</a> 是用java编写，GUI界面的实用小工具集，1.2版有16个小工具： 
+<a href="https://github.com/baishui2004/common_gui_tools" target="_blank">Common Gui Tools</a> 是用java编写，GUI界面的实用小工具集，1.21版有16个小工具： 
 
 <pre>
 1，<a href="#Character Converter">编码转换：Character Converter</a>
@@ -27,7 +27,7 @@ Java GUI实用小工具集 Common Gui Tools
 
 <br /><b>下载及使用说明：</b>
 <br />Require Java 6.0+
-<br />下载压缩包<a href="https://github.com/baishui2004/common_gui_tools/blob/master/dest/common_gui_tools-1.2.zip?raw=true">common_gui_tools-1.2.zip</a>，解压，Windows下，用start.bat运行，Linux下使用start.sh运行。
+<br />下载压缩包<a href="https://github.com/baishui2004/common_gui_tools/blob/master/dest/common_gui_tools-1.21.zip?raw=true">common_gui_tools-1.21.zip</a>，解压，Windows下，用start.bat运行，Linux下使用start.sh运行。
 <!-- more -->
 
 <br /><b>配置说明：</b> 
@@ -85,7 +85,7 @@ Java GUI实用小工具集 Common Gui Tools
 <br />通过解析Eclipse的Java Project、Dynamic Web Project或者MyEclipse的Web Project的相关配置文件，自动构建者这三类Project的Ant脚本。
 <br />
 ![Ant Script Auto Build](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Ant%20Script%20Auto%20Build.png)
-<br />Ant Script Auto Build也提供独立版本，下载文件：<a href="https://github.com/baishui2004/common_gui_tools/blob/master/dest/antScriptAutoBuild-1.2.zip?raw=true">antScriptAutoBuild-1.2.zip</a>
+<br />Ant Script Auto Build也提供独立版本，下载文件：<a href="https://github.com/baishui2004/common_gui_tools/blob/master/dest/antScriptAutoBuild-1.21.zip?raw=true">antScriptAutoBuild-1.21.zip</a>
 
 <b>8，<a id="Class Finder">Java类查找：Class Finder，查找本机的.class或.java</a></b>
 <br />查找文件夹下的.class及.java文件，或者文件夹下压缩文件jar,war,aar,ear,zip内的.class及.java文件。
