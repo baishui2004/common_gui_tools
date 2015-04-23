@@ -85,7 +85,7 @@ public class ShortURL extends GuiJPanel {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				StringSelection selection = new StringSelection(longURLTextField.getText());
-				// 获取系统剪切板，复制短网址
+				// 获取系统剪切板，复制长网址
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
 			}
 		});
