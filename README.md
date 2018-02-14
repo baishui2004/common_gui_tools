@@ -19,7 +19,6 @@ Java GUI实用小工具集 Common Gui Tools
 13，<a href="#JUniversal Chardet">文本编码识别：JUniversal Chardet</a>
 14，<a href="#ZHConverter Visual">中文简体繁体互转：ZHConverter Visual</a>
 15，<a href="#Escape Character Tool">字符转义工具：Escape Character Tool</a>
-16，<a href="#Short URL">短网址转换：Short URL</a>
 </pre>
 
    欢迎您使用并提供宝贵意见！
@@ -134,8 +133,3 @@ Java GUI实用小工具集 Common Gui Tools
 <br />HTML、XML、JAVA、JavaScript、CSV字符转义字符及还原，使用Apache Commons-lang的StringEscapeUtils类。
 <br />
 ![Escape Character Tool](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Escape%20Character%20Tool.png)
-
-<b>16，<a id="Short URL">短网址转换：Short URL</a></b>
-<br />当前支持将URL转换为百度提供的短网址，以及可将百度的短网址还原为原网址。
-<br />
-![Short URL](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Short%20URL.png)
