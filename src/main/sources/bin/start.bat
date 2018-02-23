@@ -1,0 +1,1 @@
+start javaw -Xms48m -Djava.ext.dirs="%CD%\lib" -jar "%CD%\lib\bs-tool-cgt-1.4.jar"
