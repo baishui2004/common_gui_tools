@@ -6,9 +6,11 @@
 
     <groupId>bs</groupId>
     <artifactId>bs-tool-cgt</artifactId>
-    <version>1.4</version>
+    <version>${cgt.version}</version>
 
     <properties>
+        <cgt.version>1.4</cgt.version>
+        <cgt-file.name>common_gui_tools</cgt-file.name>
         <commons-codec.version>1.5</commons-codec.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-io.version>1.4</commons-io.version>
@@ -62,6 +64,18 @@
             <artifactId>jodconverter</artifactId>
             <version>2.2.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>${zxing.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>${zxing.version}</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -86,6 +100,7 @@
                             src/main/MANIFEST.MF
                         </manifestFile>
                     </archive>
+                    <finalName>${cgt-file.name}-${cgt.version}</finalName>
                 </configuration>
             </plugin>
             <plugin>
@@ -101,6 +116,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <finalName>${cgt-file.name}-${cgt.version}</finalName>
+                </configuration>
             </plugin>
             <!-- maven-resources-plugin only for ide local run -->
             <plugin>
@@ -151,6 +169,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
+                            <finalName>${cgt-file.name}-${cgt.version}</finalName>
                             <descriptors>
                                 <descriptor>src/main/zip.xml</descriptor>
                             </descriptors>

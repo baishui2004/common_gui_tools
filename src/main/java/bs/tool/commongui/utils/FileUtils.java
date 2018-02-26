@@ -17,6 +17,11 @@ import java.util.regex.Pattern;
 public final class FileUtils {
 
     /**
+     * java.io.tmpdir(临时目录).
+     */
+    public final static String JAVA_IO_TMPDIR = System.getProperty("java.io.tmpdir");
+
+    /**
      * 相同大小文件查找时用的Map.
      * <p>
      * <pre>
@@ -152,8 +157,7 @@ public final class FileUtils {
     /**
      * 迭代获取地址所有文件(夹)，包括file本身.
      *
-     * @param file      文件(夹)
-     * @param paramsMap 参数
+     * @param file 文件(夹)
      * @return <code>List<File></code> 文(夹)件集合
      */
     public static List<File> getAllFile(File file) {

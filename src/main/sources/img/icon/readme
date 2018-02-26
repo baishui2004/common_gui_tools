@@ -26,6 +26,7 @@ cgt_ColorTool.png               open_icon_library\16x16 png\apps\preferences-des
 cgt_TimeTool.png                open_icon_library\16x16 png\actions\view-calendar-day-3.png
 cgt_SystemInformation.png       open_icon_library\16x16 png\apps\utilities-system-monitor.png
 
+cgt_QrCodeConverter.png         open_icon_library\16x16 png\actions\photo-link.png
 cgt_JODConverterVisual.png      open_icon_library\16x16 png\apps\openoffice.org.png
 cgt_JNotifyVisual.png           open_icon_library\16x16 png\places\intrigue-style\folder-time.png
 cgt_JUniversalChardet.png       open_icon_library\16x16 png\status\virus-detected.png

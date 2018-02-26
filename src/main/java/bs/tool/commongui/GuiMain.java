@@ -309,7 +309,17 @@ public class GuiMain extends JFrame {
                     pluginSortAndNames.add(key.substring(toolPrefix.length()));
                 }
             }
-            Collections.sort(pluginSortAndNames); // 排序
+            Collections.sort(pluginSortAndNames, new Comparator<String>() {
+                @Override
+                public int compare(String str1, String str2) {
+                    int xh1 = Integer.parseInt(str1.substring(0, str1.indexOf("_")));
+                    int xh2 = Integer.parseInt(str2.substring(0, str2.indexOf("_")));
+                    if (xh1 > xh2) {
+                        return 1;
+                    }
+                    return -1;
+                }
+            }); // 排序
 
             // 插件属性，按ID升序排列
             int moreTools_cnt = more_propsMap.size();

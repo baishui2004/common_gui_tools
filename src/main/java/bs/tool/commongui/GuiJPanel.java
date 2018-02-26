@@ -1,6 +1,7 @@
 package bs.tool.commongui;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
@@ -63,7 +64,14 @@ public abstract class GuiJPanel extends JPanel {
      * 创建指定字体、自动换行的JTextArea.
      */
     public JTextArea createJTextArea(Font font) {
-        JTextArea textArea = new JTextArea();
+        return createJTextArea(font, "");
+    }
+
+    /**
+     * 创建指定字体、自动换行的JTextArea.
+     */
+    public JTextArea createJTextArea(Font font, String defaultText) {
+        JTextArea textArea = new JTextArea(defaultText);
         textArea.setFont(font);
         textArea.setLineWrap(true);
         return textArea;
@@ -93,6 +101,17 @@ public abstract class GuiJPanel extends JPanel {
     }
 
     /**
+     * 图片选择.
+     */
+    public JFileChooser createImageChooser() {
+        JFileChooser imageChooser = new JFileChooser();
+        imageChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        imageChooser.setAcceptAllFileFilterUsed(false); // 不显示所有文件
+        imageChooser.addChoosableFileFilter(new FileNameExtensionFilter("png, jpg, jpeg, gif, bmp", "png", "jpg", "jpeg", "gif", "bmp"));
+        return imageChooser;
+    }
+
+    /**
      * 给面板增加指定标题、名称、字体及ActionListener的JButton.
      */
     public void addJButton(JPanel panel, String title, String name, Font font, ActionListener listener) {
@@ -119,8 +138,6 @@ public abstract class GuiJPanel extends JPanel {
         button.setName(name);
         return button;
     }
-
-    ;
 
     /**
      * 给面板增加指定标题、是否selected、字体及ActionListener的JCheckbox.
