@@ -27,12 +27,13 @@ cgt_TimeTool.png                open_icon_library\16x16 png\actions\view-calenda
 cgt_SystemInformation.png       open_icon_library\16x16 png\apps\utilities-system-monitor.png
 
 cgt_QrCodeConverter.png         open_icon_library\16x16 png\actions\photo-link.png
-cgt_JODConverterVisual.png      open_icon_library\16x16 png\apps\openoffice.org.png
-cgt_JNotifyVisual.png           open_icon_library\16x16 png\places\intrigue-style\folder-time.png
-cgt_JUniversalChardet.png       open_icon_library\16x16 png\status\virus-detected.png
+cgt_CodeFormatter.png           open_icon_library\16x16 png\actions\format-text-italic-5.png
 cgt_ZHConverterVisual.png       open_icon_library\16x16 png\intl\round-icons\flag-cn.png
 cgt_EscapeCharacterTool.png     open_icon_library\16x16 png\apps\accessories-character-map.png
 cgt_PostmanClient.png           open_icon_library\16x16 png\apps\http_file_server.png
+cgt_JNotifyVisual.png           open_icon_library\16x16 png\places\intrigue-style\folder-time.png
+cgt_JUniversalChardet.png       open_icon_library\16x16 png\status\virus-detected.png
+cgt_JODConverterVisual.png      open_icon_library\16x16 png\apps\openoffice.org.png
 
 
 帮助图标：

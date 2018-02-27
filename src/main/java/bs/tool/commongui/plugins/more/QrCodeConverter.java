@@ -3,8 +3,8 @@ package bs.tool.commongui.plugins.more;
 import bs.tool.commongui.GuiImagePanel;
 import bs.tool.commongui.GuiJPanel;
 import bs.tool.commongui.GuiUtils;
+import bs.tool.commongui.code.QrCodeUtil;
 import bs.tool.commongui.utils.FileUtils;
-import bs.tool.commongui.utils.QrCodeUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +68,7 @@ public class QrCodeConverter extends GuiJPanel {
         actionPanel.add(new JPanel(), BorderLayout.CENTER);
 
         // 放置按钮
-        JPanel buttonPanel = new JPanel(new GridLayout(9, 1));
+        JPanel buttonPanel = new JPanel(new GridLayout(6, 1));
         actionPanel.add(buttonPanel, BorderLayout.SOUTH);
         // 生成
         addJButton(buttonPanel, " 生成二维码 ", "", GuiUtils.font14b_cn, new MouseListener() {
@@ -95,7 +95,6 @@ public class QrCodeConverter extends GuiJPanel {
             }
         });
 
-        buttonPanel.add(new JPanel()); // 仅做填充
         // 另存图片
         addJButton(buttonPanel, " 另存图片 ", "", GuiUtils.font14_cn,
                 new ActionListener() {
@@ -118,6 +117,7 @@ public class QrCodeConverter extends GuiJPanel {
                 });
 
         buttonPanel.add(new JPanel()); // 仅做填充
+
         // 选择图片
         addJButton(buttonPanel, " 选择图片 ", "", GuiUtils.font14_cn,
                 new ActionListener() {
@@ -134,7 +134,6 @@ public class QrCodeConverter extends GuiJPanel {
                     }
                 });
 
-        buttonPanel.add(new JPanel()); // 仅做填充
         // 解析
         addJButton(buttonPanel, " 解析二维码 ", "", GuiUtils.font14b_cn, new MouseListener() {
             public void mouseReleased(MouseEvent event) {

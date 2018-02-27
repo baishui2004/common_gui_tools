@@ -52,6 +52,16 @@ public class GuiUtils {
 
     /**************************** 字体 ****************************/
 
+    /**************************** Code类型 ****************************/
+    public static String CODE_TYPE_JSON = "JSON";
+    public static String CODE_TYPE_XML = "XML";
+    public static String CODE_TYPE_JAVA = "Java";
+    public static String CODE_TYPE_JS = "JS";
+    public static String CODE_TYPE_PYTHON = "Python";
+    public static String CODE_TYPE_SQL = "SQL";
+
+    /**************************** Code类型 ****************************/
+
     /**
      * 所有字体.
      */

@@ -1,4 +1,4 @@
-package bs.tool.commongui.utils;
+package bs.tool.commongui.code;
 
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
