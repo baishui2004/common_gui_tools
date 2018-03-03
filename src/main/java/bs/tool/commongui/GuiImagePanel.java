@@ -38,7 +38,7 @@ public class GuiImagePanel extends JPanel {
         try {
             image = ImageIO.read(new File(imagePath));
         } catch (IOException e) {
-            e.printStackTrace();
+            GuiUtils.log(e);
         }
     }
 

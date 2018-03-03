@@ -429,6 +429,7 @@ public class JODConverterVisual extends GuiJPanel {
             resultTextArea
                     .append("转换出错，请检查OpenOffice服务是否启动或者点开高级按钮查看IP、端口设置是否正确\n"
                             + "本机OpenOffice服务启动方法：CMD下，OpenOffice_HOME/program>soffice -headless -accept=\"socket,host=127.0.0.1,port=8100;urp;\" -nofirststartwizard\n\n");
+            GuiUtils.log(e);
             return;
         }
         DocumentConverter converter = new OpenOfficeDocumentConverter(con);

@@ -1,5 +1,6 @@
 package bs.tool.ant;
 
+import bs.tool.commongui.GuiUtils;
 import bs.tool.eclipse.ProjectPropertiesDeal;
 import bs.tool.eclipse.ProjectPropertiesDealInterface;
 
@@ -236,8 +237,8 @@ public class AntScriptAutoBuild {
         if (!System.getProperty("os.name").contains("Windows")) {
             try {
                 Runtime.getRuntime().exec(new String[]{"chmod", "755", mergerFilePath}).waitFor();
-            } catch (Throwable e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                GuiUtils.log(e);
             }
         }
     }
@@ -342,7 +343,7 @@ public class AntScriptAutoBuild {
                 path = path.substring(0, path.length() - "classes".length() - 1);
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            GuiUtils.log(e);
         }
         return path;
     }

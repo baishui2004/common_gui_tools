@@ -1,5 +1,7 @@
 package bs.tool.eclipse;
 
+import bs.tool.commongui.GuiUtils;
+
 import javax.swing.*;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -351,19 +353,19 @@ public class ProjectPropertiesDeal implements ProjectPropertiesDealInterface {
             reader = factory.createXMLStreamReader(stream);
             xmlParse.parse(reader);
         } catch (XMLStreamException e) {
-            e.printStackTrace();
+            GuiUtils.log(e);
         } finally {
             if (stream != null) {
                 try {
                     stream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    GuiUtils.log(e);
                 } finally {
                     if (reader != null) {
                         try {
                             reader.close();
                         } catch (XMLStreamException e) {
-                            e.printStackTrace();
+                            GuiUtils.log(e);
                         }
                     }
                 }

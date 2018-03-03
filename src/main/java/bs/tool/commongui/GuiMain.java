@@ -116,6 +116,7 @@ public class GuiMain extends JFrame {
                     JDialog.setDefaultLookAndFeelDecorated(true);
                     return true;
                 } catch (Exception e) {
+                    GuiUtils.log(e);
                     return false;
                 }
             }
@@ -449,7 +450,7 @@ public class GuiMain extends JFrame {
                     });
                 } catch (ClassNotFoundException e) {
                     GuiUtils.log("Warn: Ignore plugin \"" + sortAndName[1]
-                            + "\", because can not find it's Class \"" + className + "\".");
+                            + "\", because can not find it's Class \"" + className + "\".", e);
                 }
             }
         } catch (Exception e) {

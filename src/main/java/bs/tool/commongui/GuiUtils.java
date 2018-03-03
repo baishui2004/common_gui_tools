@@ -1,5 +1,8 @@
 package bs.tool.commongui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -13,6 +16,8 @@ import java.util.Map;
 import java.util.SortedMap;
 
 public class GuiUtils {
+
+    private static Logger logger = LoggerFactory.getLogger(GuiUtils.class);
 
     /**************************** 编码 ****************************/
 
@@ -352,6 +357,7 @@ public class GuiUtils {
      * @param msg 消息
      */
     public static void log(String msg) {
+        logger.info(msg);
         GuiMain.msgTextArea.append(msg + "\n");
     }
 
@@ -361,6 +367,7 @@ public class GuiUtils {
      * @param e 异常
      */
     public static void log(Exception e) {
+        logger.error("", e);
         StackTraceElement[] ste = e.getStackTrace();
         StringBuilder esb = new StringBuilder();
         esb.append("Exception: ").append(e.getClass().getName()).append(": ").append(e.getMessage()).append("\n");
@@ -377,6 +384,7 @@ public class GuiUtils {
      * @param e   异常
      */
     public static void log(String msg, Exception e) {
+        logger.error(msg, e);
         log(msg);
         log(e.getMessage());
     }

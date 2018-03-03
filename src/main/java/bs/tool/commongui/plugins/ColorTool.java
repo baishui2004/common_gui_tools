@@ -136,7 +136,7 @@ public class ColorTool extends GuiJPanel {
                 color = new Color(Integer.parseInt(r), Integer.parseInt(g), Integer.parseInt(b));
             }
         } catch (Exception e) {
-            GuiUtils.log("", e);
+            GuiUtils.log(e);
         }
         return color;
     }
@@ -167,7 +167,7 @@ public class ColorTool extends GuiJPanel {
                 color = new Color(Integer.parseInt(r, 16), Integer.parseInt(g, 16), Integer.parseInt(b, 16));
             }
         } catch (Exception e) {
-            GuiUtils.log("", e);
+            GuiUtils.log(e);
         }
         return color;
     }
