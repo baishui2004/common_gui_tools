@@ -2,8 +2,8 @@ package bs.tool.commongui.plugins.more;
 
 import bs.tool.commongui.GuiJPanel;
 import bs.tool.commongui.GuiUtils;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -130,11 +130,15 @@ public class CodeFormatter extends GuiJPanel {
      * @return
      */
     public String prettyJson(String jsonStr) {
-        int features = JSON.DEFAULT_GENERATE_FEATURE;
-        features = SerializerFeature.config(features, SerializerFeature.PrettyFormat, true);
-        features = SerializerFeature.config(features, SerializerFeature.WriteTabAsSpecial, false); // 不起作用
-        Object json = JSON.parse(jsonStr);
-        return JSON.toJSONString(json, features);
+        try {
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .create();
+            return gson.toJson(gson.fromJson(jsonStr, Object.class));
+        } catch (Exception e) {
+            showExceptionMessage(e);
+            return jsonStr;
+        }
     }
 
     /**
@@ -144,8 +148,14 @@ public class CodeFormatter extends GuiJPanel {
      * @return
      */
     public String unPrettyJson(String jsonStr) {
-        Object json = JSON.parse(jsonStr);
-        return JSON.toJSONString(json);
+        try {
+            Gson gson = new GsonBuilder()
+                    .create();
+            return gson.toJson(gson.fromJson(jsonStr, Object.class));
+        } catch (Exception e) {
+            showExceptionMessage(e);
+            return jsonStr;
+        }
     }
 
 }

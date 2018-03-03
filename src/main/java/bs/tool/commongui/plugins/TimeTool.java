@@ -72,6 +72,15 @@ public class TimeTool extends GuiJPanel {
                 curTimeFormatter = ((JComboBox) event.getSource()).getSelectedItem().toString();
             }
         });
+        // 当前时间
+        addJButton(convertFlowPanel, "当前时间", "", GuiUtils.font13_cn, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Date curDate = new Date();
+                timeStrTextField.setText(new SimpleDateFormat(curTimeFormatter).format(curDate));
+                timestampTextField.setText(Long.toString(curDate.getTime()));
+            }
+        });
         // 复制
         addJButton(convertFlowPanel, "复制", "", GuiUtils.font13_cn, new ActionListener() {
             @Override
