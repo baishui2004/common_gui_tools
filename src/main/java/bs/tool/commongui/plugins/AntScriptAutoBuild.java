@@ -31,7 +31,7 @@ public class AntScriptAutoBuild extends GuiJPanel {
     /**
      * Project路径选择.
      */
-    private JFileChooser projectPath_Chooser = new JFileChooser();
+    private JFileChooser projectPathChooser = new JFileChooser();
 
     /**
      * 是否备份已存在的同名构建属性脚本及脚本.
@@ -65,7 +65,7 @@ public class AntScriptAutoBuild extends GuiJPanel {
         fileChooPanel.add(pathPanel, BorderLayout.CENTER);
         JPanel buttonFlowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         addJButton(buttonFlowPanel, "浏览", "", GuiUtils.font12_cn,
-                buttonBrowseListener(projectPath_Chooser, projectPathTextField));
+                buttonBrowseListener(projectPathChooser, projectPathTextField));
         addJCheckBox(buttonFlowPanel, "备份已存在脚本", true, GuiUtils.font12_cn, new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 isBak = ((JCheckBox) event.getSource()).isSelected();
@@ -115,7 +115,7 @@ public class AntScriptAutoBuild extends GuiJPanel {
             }
         });
         // Project路径选择控件
-        projectPath_Chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 仅可选择文件夹
+        projectPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 仅可选择文件夹
         fileChooPanel.add(buttonFlowPanel, BorderLayout.EAST);
         inputPanel.add(fileChooPanel, BorderLayout.NORTH);
 

@@ -37,7 +37,7 @@ public class ClassFinder extends GuiJPanel {
     /**
      * 查找文件/文件夹路径选择.
      */
-    private JFileChooser searchPath_Chooser = new JFileChooser();
+    private JFileChooser searchPathChooser = new JFileChooser();
 
     /**
      * 查找按钮.
@@ -103,7 +103,7 @@ public class ClassFinder extends GuiJPanel {
 
         JPanel secondFlowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         addJButton(secondFlowPanel, "浏览", "", GuiUtils.font12_cn,
-                buttonBrowseListener(searchPath_Chooser, searchPathTextField));
+                buttonBrowseListener(searchPathChooser, searchPathTextField));
         addJLabel(secondFlowPanel, " ", GuiUtils.font14_cn);
         // 查找按钮
         searchButton = createJButton("查找", "", GuiUtils.font14b_cn);
@@ -180,8 +180,8 @@ public class ClassFinder extends GuiJPanel {
         });
         secondFlowPanel.add(searchButton);
         // 查找路径选择控件
-        searchPath_Chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
-        searchPath_Chooser.setFileFilter(new FileFilter() {
+        searchPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
+        searchPathChooser.setFileFilter(new FileFilter() {
             public String getDescription() {
                 return compressFileTypes + ",文件夹";
             }

@@ -67,6 +67,12 @@ public class GuiUtils {
 
     /**************************** Code类型 ****************************/
 
+    /**************************** Split类型 ****************************/
+    public static String SPLIT_TYPE_SIZE = "Size(MB)";
+    public static String SPLIT_TYPE_LINE = "Line";
+
+    /**************************** Split类型 ****************************/
+
     /**
      * 所有字体.
      */

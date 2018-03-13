@@ -34,7 +34,7 @@ public class FileDigitalSignature extends GuiJPanel {
     /**
      * 文本/文件夹路径选择.
      */
-    private JFileChooser digitalPath_Chooser = new JFileChooser();
+    private JFileChooser digitalPathChooser = new JFileChooser();
 
     /**
      * 是否计算MD5.
@@ -89,7 +89,7 @@ public class FileDigitalSignature extends GuiJPanel {
 
         JPanel buttonFlowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         addJButton(buttonFlowPanel, "浏览", "", GuiUtils.font12_cn,
-                buttonBrowseListener(digitalPath_Chooser, digitalPathTextField));
+                buttonBrowseListener(digitalPathChooser, digitalPathTextField));
         // 计算按钮
         digitalButton = createJButton("计算", "", GuiUtils.font14b_cn);
         digitalButton.addMouseListener(new MouseListener() {
@@ -141,7 +141,7 @@ public class FileDigitalSignature extends GuiJPanel {
         });
         buttonFlowPanel.add(digitalButton);
         // 路径选择控件
-        digitalPath_Chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
+        digitalPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
         fileChooAndDetectPanel.add(buttonFlowPanel, BorderLayout.EAST);
         inputPanel.add(fileChooAndDetectPanel);
 

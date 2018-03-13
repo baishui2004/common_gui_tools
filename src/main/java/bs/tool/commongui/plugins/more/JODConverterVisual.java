@@ -34,7 +34,7 @@ public class JODConverterVisual extends GuiJPanel {
     /**
      * 转换文件/文件夹路径选择.
      */
-    private JFileChooser convertPath_Chooser = new JFileChooser();
+    private JFileChooser convertPathChooser = new JFileChooser();
 
     /**
      * 转换按钮.
@@ -48,7 +48,7 @@ public class JODConverterVisual extends GuiJPanel {
     /**
      * 转换目标文件夹路径选择.
      */
-    private JFileChooser convertedPath_Chooser = new JFileChooser();
+    private JFileChooser convertedPathChooser = new JFileChooser();
 
     /**
      * 转换文件格式.
@@ -261,7 +261,7 @@ public class JODConverterVisual extends GuiJPanel {
         buttonFlowPanel.add(convertButton);
 
         // 转换路径选择控件
-        convertPath_Chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
+        convertPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
         fileChooAndDetectPanel.add(buttonFlowPanel, BorderLayout.EAST);
         inputPanel.add(fileChooAndDetectPanel);
 
@@ -300,7 +300,7 @@ public class JODConverterVisual extends GuiJPanel {
             }
         });
         // 目标路径选择控件
-        convertedPath_Chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 只可选择文件夹
+        convertedPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 只可选择文件夹
 
         // 目标文件名是否保留原始文件类型.
         addJCheckBox(comboxButtonFlowPanel, "文件名中保留原类型", false, GuiUtils.font14_cn, new ActionListener() {
@@ -321,7 +321,7 @@ public class JODConverterVisual extends GuiJPanel {
                     fileFromBox.setEnabled(false);
                 } else {
                     fileFromBox.setEnabled(true);
-                    File selectFile = convertPath_Chooser.getSelectedFile();
+                    File selectFile = convertPathChooser.getSelectedFile();
                     if (!selectFile.isDirectory()) {
                         String fileType = FileUtils.getFileType(selectFile.getName());
                         if (("," + fromComboboxItems + ",").contains("," + fileType + ",")) {
@@ -506,10 +506,10 @@ public class JODConverterVisual extends GuiJPanel {
      * 选择转换文件/文件夹.
      */
     private void chooseConvertFile(JComboBox fileFromBox) {
-        if (convertPath_Chooser.showDialog(getContextPanel(), "确定") == JFileChooser.CANCEL_OPTION) {
+        if (convertPathChooser.showDialog(getContextPanel(), "确定") == JFileChooser.CANCEL_OPTION) {
             return;
         }
-        File selectFile = convertPath_Chooser.getSelectedFile();
+        File selectFile = convertPathChooser.getSelectedFile();
         if (selectFile != null) {
             boolean flag = true;
             if (!selectFile.exists()) {
@@ -546,10 +546,10 @@ public class JODConverterVisual extends GuiJPanel {
      * 选择目标文件夹.
      */
     private void chooseConvertedFolder() {
-        if (convertedPath_Chooser.showDialog(getContextPanel(), "确定") == JFileChooser.CANCEL_OPTION) {
+        if (convertedPathChooser.showDialog(getContextPanel(), "确定") == JFileChooser.CANCEL_OPTION) {
             return;
         }
-        File selectFile = convertedPath_Chooser.getSelectedFile();
+        File selectFile = convertedPathChooser.getSelectedFile();
         if (selectFile != null) {
             if (!selectFile.exists()) {
                 showMessage("转换目标文件夹不存在将自动创建！", "提示", JOptionPane.INFORMATION_MESSAGE);

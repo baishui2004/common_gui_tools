@@ -33,7 +33,7 @@ public class JUniversalChardet extends GuiJPanel {
     /**
      * 探测文本/文件夹路径选择.
      */
-    private JFileChooser detectPath_Chooser = new JFileChooser();
+    private JFileChooser detectPathChooser = new JFileChooser();
 
     /**
      * 探测按钮.
@@ -83,7 +83,7 @@ public class JUniversalChardet extends GuiJPanel {
 
         JPanel buttonFlowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         addJButton(buttonFlowPanel, "浏览", "", GuiUtils.font12_cn,
-                buttonBrowseListener(detectPath_Chooser, detectPathTextField));
+                buttonBrowseListener(detectPathChooser, detectPathTextField));
         // 探测按钮
         detectButton = createJButton("探测", "", GuiUtils.font14b_cn);
         detectButton.addMouseListener(new MouseListener() {
@@ -136,7 +136,7 @@ public class JUniversalChardet extends GuiJPanel {
         });
         buttonFlowPanel.add(detectButton);
         // 探测路径选择控件
-        detectPath_Chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
+        detectPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
         fileChooAndDetectPanel.add(buttonFlowPanel, BorderLayout.EAST);
         inputPanel.add(fileChooAndDetectPanel);
 

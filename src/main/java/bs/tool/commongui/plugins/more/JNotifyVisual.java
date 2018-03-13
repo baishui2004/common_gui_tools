@@ -30,7 +30,7 @@ public class JNotifyVisual extends GuiJPanel {
     /**
      * 监控文件夹路径选择.
      */
-    private JFileChooser monitorPath_Chooser = new JFileChooser();
+    private JFileChooser monitorPathChooser = new JFileChooser();
 
     /**
      * 监控按钮.
@@ -52,7 +52,7 @@ public class JNotifyVisual extends GuiJPanel {
     /**
      * 监控日志文件选择.
      */
-    private JFileChooser monitorLogFile_Chooser = new JFileChooser(".");
+    private JFileChooser monitorLogFileChooser = new JFileChooser(".");
 
     /**
      * 文件名包含字符表单.
@@ -118,7 +118,7 @@ public class JNotifyVisual extends GuiJPanel {
         fileChooPanel.add(pathPanel, BorderLayout.CENTER);
         JPanel buttonFlowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         addJButton(buttonFlowPanel, "浏览", "", GuiUtils.font12_cn,
-                buttonBrowseListener(monitorPath_Chooser, monitorPathTextField));
+                buttonBrowseListener(monitorPathChooser, monitorPathTextField));
         // 监控按钮
         monitorButton = createJButton("监控", "", GuiUtils.font14b_cn);
         monitorButton.addMouseListener(new MouseListener() {
@@ -174,7 +174,7 @@ public class JNotifyVisual extends GuiJPanel {
         });
         buttonFlowPanel.add(monitorButton);
         // 监控路径选择控件
-        monitorPath_Chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 仅可选择文件夹
+        monitorPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 仅可选择文件夹
         // 停止监控按钮
         stopMonitorButton = createJButton("停止监控", "", GuiUtils.font14b_cn);
         stopMonitorButton.setEnabled(false);
@@ -224,7 +224,7 @@ public class JNotifyVisual extends GuiJPanel {
             }
 
             public void mousePressed(MouseEvent e) {
-                fileChooserBrowse(monitorLogFile_Chooser, monitorLogFilePathTextField);
+                fileChooserBrowse(monitorLogFileChooser, monitorLogFilePathTextField);
             }
 
             public void mouseExited(MouseEvent e) {
@@ -238,7 +238,7 @@ public class JNotifyVisual extends GuiJPanel {
         });
         addJTextField(logPathPanel, monitorLogFilePathTextField, GuiUtils.font14_un, BorderLayout.CENTER);
         // 监控路径选择控件
-        monitorLogFile_Chooser.setFileSelectionMode(JFileChooser.FILES_ONLY); // 仅可选择文件
+        monitorLogFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY); // 仅可选择文件
         logPathPanel.add(new JPanel(), BorderLayout.SOUTH);
         logChooPanel.add(logPathPanel, BorderLayout.CENTER);
 
