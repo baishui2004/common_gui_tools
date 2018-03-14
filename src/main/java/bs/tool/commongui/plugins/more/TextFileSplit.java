@@ -73,6 +73,19 @@ public class TextFileSplit extends GuiJPanel {
     private boolean fileNameSupportRegex = true;
 
     /**
+     * 源文件编码 - 程序自动检测.
+     */
+    private String sourceEncodingAuto = "程序自动检测";
+    /**
+     * 源文件编码.
+     */
+    private JTextField sourceEncodingField = new JTextField(sourceEncodingAuto, 8);
+    /**
+     * 切分结果文件编码.
+     */
+    private JTextField targetEncodingField = new JTextField(GuiUtils.CHARSET_UTF_8, 6);
+
+    /**
      * 切分结果文本域.
      */
     private JTextArea resultTextArea = createJTextArea(GuiUtils.font14_un);
@@ -83,7 +96,7 @@ public class TextFileSplit extends GuiJPanel {
         setLayout(new BorderLayout());
 
         // 输入及条件Panel
-        JPanel inputPanel = new JPanel(new GridLayout(2, 1));
+        JPanel inputPanel = new JPanel(new GridLayout(3, 1));
 
         // 切分文本/文件夹表单、切分按钮Panel
         JPanel fileChooAndSplitPanel = new JPanel(new BorderLayout());
@@ -109,6 +122,15 @@ public class TextFileSplit extends GuiJPanel {
                     return;
                 }
                 splitResultDirectory = file.getAbsolutePath() + " - split result";
+                File splitResultDir = new File(splitResultDirectory);
+                if (splitResultDir.exists()) {
+                    try {
+                        org.apache.commons.io.FileUtils.deleteDirectory(splitResultDir);
+                    } catch (IOException e) {
+                        showMessage("删除原切分结果文件夹失败！", "警告", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+                splitResultDir.mkdir();
                 Map<String, Object> paramsMap = new HashMap<String, Object>();
                 paramsMap.put("fileNameContainsText", fileNameContainsTextField.getText().trim());
                 paramsMap.put("fileNameNotContainsText", fileNameNotContainsTextField.getText().trim());
@@ -117,14 +139,24 @@ public class TextFileSplit extends GuiJPanel {
 
                 resultTextArea.setText("");
                 try {
+                    String sourceEncoding = sourceEncodingField.getText().trim();
+                    String targetEncoding = targetEncodingField.getText().trim();
+                    if (sourceEncoding.length() == 0) {
+                        showMessage("源文件编码不可为空！", "警告", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    if (targetEncoding.length() == 0) {
+                        showMessage("切分结果文件编码不可为空！", "警告", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
                     int splitLength = Integer.parseInt(splitValueField.getText().trim());
                     if (!file.isDirectory()) {
-                        appendSplitResult(resultTextArea, file, splitLength);
+                        appendSplitResult(resultTextArea, file, splitLength, sourceEncoding, targetEncoding);
                     } else {
                         List<File> files = new ArrayList<File>();
                         FileUtils.loopDirectory(file, files, new SearchFileNameParams(paramsMap));
                         for (File fFile : files) {
-                            appendSplitResult(resultTextArea, fFile, splitLength);
+                            appendSplitResult(resultTextArea, fFile, splitLength, sourceEncoding, targetEncoding);
                         }
                         resultTextArea.append("\nCount files: " + files.size());
                     }
@@ -197,6 +229,15 @@ public class TextFileSplit extends GuiJPanel {
         });
         inputPanel.add(advancePanel);
 
+        // 高级条件面板
+        JPanel advanceConditionPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        addJLabel(advanceConditionPanel, " ", GuiUtils.font12_cn);
+        addJLabel(advanceConditionPanel, "源文件编码:", GuiUtils.font14_cn);
+        advanceConditionPanel.add(sourceEncodingField);
+        addJLabel(advanceConditionPanel, " 切分结果文件编码:", GuiUtils.font14_cn);
+        advanceConditionPanel.add(targetEncodingField);
+        inputPanel.add(advanceConditionPanel);
+
         add(inputPanel, BorderLayout.NORTH);
 
         // 切分结果输出
@@ -208,23 +249,21 @@ public class TextFileSplit extends GuiJPanel {
     /**
      * append切分文本编码结果.
      */
-    private void appendSplitResult(JTextArea resultTextArea, File file, int splitLength) throws IOException {
-        resultTextArea.append(file.getAbsolutePath() + "\n    Result: " + splitFileResult(file, splitLength)
+    private void appendSplitResult(JTextArea resultTextArea, File file, int splitLength, String sourceEncoding, String targetEncoding) throws IOException {
+        resultTextArea.append(file.getAbsolutePath() + "\n    Result: " + splitFileResult(file, splitLength, sourceEncoding, targetEncoding)
                 + "\n");
     }
 
     /**
      * 切分文本编码.
      */
-    private String splitFileResult(File file, int splitLength) throws IOException {
+    private String splitFileResult(File file, int splitLength, String sourceEncoding, String targetEncoding) throws IOException {
         StringBuilder rsb = new StringBuilder();
-        String charset = JUniversalChardet.detectFileCharset(file, 4096);
-        LineIterator lineIterator = org.apache.commons.io.FileUtils.lineIterator(file, charset);
-        File splitResultDir = new File(splitResultDirectory);
-        if (splitResultDir.exists()) {
-            org.apache.commons.io.FileUtils.deleteDirectory(splitResultDir);
+        String charset = sourceEncoding;
+        if (charset.equals(sourceEncodingAuto)) {
+            charset = JUniversalChardet.detectFileCharset(file, 4096);
         }
-        splitResultDir.mkdir();
+        LineIterator lineIterator = org.apache.commons.io.FileUtils.lineIterator(file, charset);
         String fileName = file.getName();
         int lastIndex = fileName.lastIndexOf(".");
         lastIndex = (lastIndex == -1 ? fileName.length() : lastIndex);
@@ -232,7 +271,7 @@ public class TextFileSplit extends GuiJPanel {
         String fileType = fileName.substring(lastIndex + 1, fileName.length());
         String rs;
         int fileNum = 1;
-        while ((rs = loopSplitFile(lineIterator, splitLength, fileSimpleName + (fileNum++) + (fileType.length() != 0 ? "." : "") + fileType)) != null) {
+        while ((rs = loopSplitFile(lineIterator, splitLength, fileSimpleName + " - " + (fileNum++) + (fileType.length() != 0 ? "." : "") + fileType, targetEncoding)) != null) {
             if (rsb.length() != 0) {
                 rsb.append("            ");
             }
@@ -242,13 +281,13 @@ public class TextFileSplit extends GuiJPanel {
         return rsb.toString();
     }
 
-    private String loopSplitFile(LineIterator lineIterator, int splitLength, String splitFileName) throws IOException {
+    private String loopSplitFile(LineIterator lineIterator, int splitLength, String splitFileName, String targetEncoding) throws IOException {
         File splitFile = new File(splitResultDirectory + "/" + splitFileName);
         int lineCnt = 0;
         List<String> lines;
         while ((lines = iteratorLine(lineIterator, 100, splitLength, lineCnt)).size() != 0) {
             lineCnt = lines.size();
-            org.apache.commons.io.FileUtils.writeLines(splitFile, GuiUtils.CHARSET_UTF_8, lines);
+            org.apache.commons.io.FileUtils.writeLines(splitFile, targetEncoding, lines);
             if (currentSplitType.equals(GuiUtils.SPLIT_TYPE_SIZE) && splitFile.getTotalSpace() >= splitLength * 1024 * 1024) {
                 break;
             }
