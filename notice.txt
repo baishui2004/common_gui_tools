@@ -31,6 +31,8 @@ Java依赖包说明：
 
 4, juniversalchardet-1.0.3.jar     插件JUniversal Chardet类bs.util.tool.commongui.plugins.more.JUniversalChardet.java
                                                                                              类包来源：https://code.google.com/p/juniversalchardet/
+                                                                                                     https://github.com/thkoch2001/juniversalchardet
+                                                                                             Mozilla Project: https://www-archive.mozilla.org/projects/intl/chardet.html
 
 5, ZHConverter.jar                 插件ZHConverter Visual类bs.util.tool.commongui.plugins.more.ZHConverterVisual.java
                                                                                              类包来源：https://code.google.com/p/java-zhconverter/
@@ -38,9 +40,14 @@ Java依赖包说明：
 6, commons-lang-2.6.jar            类bs.tool.commongui.utils.EscapeUtils.java
                                                                                              插件Escape Character Tool类bs.util.tool.commongui.plugins.more.EscapeCharacterTool.java
                                                                                              类包来源：http://commons.apache.org/proper/commons-lang/index.html
-7, commons-io-1.4.jar                                                                        插件Folder And File Operate类bs.util.tool.commongui.plugins.FolderAndFileOperate.java
-7, commons-io-1.4.jar                                                                        插件Folder And File Operate类bs.util.tool.commongui.plugins.more.JODConverterVisual.java
+
+7, commons-io-1.4.jar                                                                        多个插件使用此类包中类
                                                                                              类包来源：http://commons.apache.org/proper/commons-io/index.html
 
 8, fastjson-1.0.6.jar              插件Postman Client类bs.util.tool.commongui.plugins.more.PostmanClient.java
                                                                                              类包来源：http://repo1.maven.org/maven2/com/alibaba/fastjson/
+
+9, DJNativeSwing, swt.win32.x86_64 插件Simple Webview类bs.util.tool.commongui.plugins.more.SimpleWebview.java
+                                                                                             类包来源：https://sourceforge.net/projects/djproject/files/DJ Native Swing/
+                                                                                                     https://mvnrepository.com/artifact/org.eclipse.swt/org.eclipse.swt.win32.win32.x86_64/4.3
+                                                                                                     other platform: https://mvnrepository.com/artifact/org.eclipse.swt   Standard Widget Toolkit

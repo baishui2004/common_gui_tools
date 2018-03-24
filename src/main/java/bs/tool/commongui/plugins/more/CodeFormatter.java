@@ -2,8 +2,7 @@ package bs.tool.commongui.plugins.more;
 
 import bs.tool.commongui.GuiJPanel;
 import bs.tool.commongui.GuiUtils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.reflect.Type;
 
 /**
  * Code格式化.
@@ -131,7 +131,7 @@ public class CodeFormatter extends GuiJPanel {
      */
     public String prettyJson(String jsonStr) {
         try {
-            Gson gson = new GsonBuilder()
+            Gson gson = getGsonBuilder()
                     .setPrettyPrinting()
                     .create();
             return gson.toJson(gson.fromJson(jsonStr, Object.class));
@@ -149,13 +149,31 @@ public class CodeFormatter extends GuiJPanel {
      */
     public String unPrettyJson(String jsonStr) {
         try {
-            Gson gson = new GsonBuilder()
+            Gson gson = getGsonBuilder()
                     .create();
             return gson.toJson(gson.fromJson(jsonStr, Object.class));
         } catch (Exception e) {
             showExceptionMessage(e);
             return jsonStr;
         }
+    }
+
+    /**
+     * How to prevent Gson from expressing integers as floats.
+     * https://stackoverflow.com/questions/15507997/how-to-prevent-gson-from-expressing-integers-as-floats
+     *
+     * @return
+     */
+    private GsonBuilder getGsonBuilder() {
+        return new GsonBuilder().
+                registerTypeAdapter(Double.class, new JsonSerializer<Double>() {
+                    @Override
+                    public JsonElement serialize(Double src, Type typeOfSrc, JsonSerializationContext context) {
+                        if (src == src.longValue())
+                            return new JsonPrimitive(src.longValue());
+                        return new JsonPrimitive(src);
+                    }
+                });
     }
 
 }

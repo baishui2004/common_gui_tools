@@ -16,6 +16,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class JUniversalChardet extends GuiJPanel {
     /**
      * 取样大小表单.
      */
-    private JTextField detectSizeTextField = new JTextField("4096", 7);
+    private JTextField detectSizeTextField = new JTextField("51200", 7);
 
     /**
      * 文件名包含字符表单.
@@ -74,7 +75,7 @@ public class JUniversalChardet extends GuiJPanel {
         // 探测文本/文件夹表单、探测按钮Panel
         JPanel fileChooAndDetectPanel = new JPanel(new BorderLayout());
         // 探测文本/文件夹表单
-        addJLabel(fileChooAndDetectPanel, "  探测文本/文件夹: ", GuiUtils.font14_cn, BorderLayout.WEST);
+        addJLabel(fileChooAndDetectPanel, "  探测文本/文件夹/URL: ", GuiUtils.font14_cn, BorderLayout.WEST);
         JPanel fileChooPanel = new JPanel(new BorderLayout());
         fileChooPanel.add(new JPanel(), BorderLayout.NORTH);
         addJTextField(fileChooPanel, detectPathTextField, GuiUtils.font14_un, BorderLayout.CENTER);
@@ -90,8 +91,18 @@ public class JUniversalChardet extends GuiJPanel {
             public void mouseReleased(MouseEvent event) {
                 String path = detectPathTextField.getText().trim();
                 File file = new File(path);
+                boolean exists = true;
                 if (!file.exists()) {
-                    showMessage("探测文本/文件夹不存在！", "警告", JOptionPane.WARNING_MESSAGE);
+                    try {
+                        file = new File(FileUtils.JAVA_IO_TMPDIR + "/" + "detect-" + System.currentTimeMillis());
+                        org.apache.commons.io.FileUtils.copyURLToFile(new URL(path), file);
+                    } catch (IOException e) {
+                        GuiUtils.log(e);
+                        exists = false;
+                    }
+                }
+                if (!exists || file == null || !file.exists()) {
+                    showMessage("探测文本/文件夹/URL不存在或错误！", "警告", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 Map<String, Object> paramsMap = new HashMap<String, Object>();
