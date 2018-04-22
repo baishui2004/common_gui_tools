@@ -1,5 +1,11 @@
-Version 1.4    2018-2-14
-1，删除插件：短网址转换Short URL； 2018-2-14
+Version 1.4    2018-4-22
+1，改为Maven项目；
+2，删除插件：短网址转换Short URL； 2018-2-14
+3，增加插件：二维码转换QrCode Converter； 2018-2-26
+4，增加插件：Code格式化Code Formatter； 2018-2-27
+5，增加插件：文本文件切分Text File Split； 2018-3-14
+6，增加插件：简易Webview Simple Webview； 2018-3-24
+7，插件编码转换：Character Converter支持Decode的字符中含有非编码字符； 2018-4-22
 
 
 
