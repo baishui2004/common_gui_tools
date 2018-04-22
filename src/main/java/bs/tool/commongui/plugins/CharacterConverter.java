@@ -4,6 +4,7 @@ import bs.tool.commongui.GuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import bs.tool.commongui.utils.RadixUtils;
 import bs.util.common.CodecUtil;
+import org.apache.commons.codec.DecoderException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,7 +64,7 @@ public class CharacterConverter extends GuiJPanel {
     /**
      * 进制前缀符.
      */
-    private String[] prefixs = new String[]{"空格", "空", "-", "%", "\\u"};
+    private String[] prefixs = new String[]{"空格", "空", "-", "%", "\\u", "\\x"};
 
     /**
      * 进制前缀符下拉框.
@@ -265,24 +266,11 @@ public class CharacterConverter extends GuiJPanel {
                     String input = fields[sort - 1].getText();
                     clearTextFields();
                     fields[sort - 1].setText(input);
-                    input = input.replace(curPrefix, ""); // 去除前缀符
                     if (input.length() == 0) {
                         return;
                     }
                     try {
-                        String decodeString = "";
-                        if (codeType_16Radix.equals(curCodeType)) {
-                            decodeString = CodecUtil.decodeHex(input, charsets[sort - 1]);
-                        } else if (codeType_10Radix.equals(curCodeType)) {
-                            decodeString = CodecUtil.decodeHex(RadixUtils.convertRadixString10To16(input),
-                                    charsets[sort - 1]);
-                        } else if (codeType_8Radix.equals(curCodeType)) {
-                            decodeString = CodecUtil.decodeHex(RadixUtils.convertRadixString8To16(input),
-                                    charsets[sort - 1]);
-                        } else if (codeType_2Radix.equals(curCodeType)) {
-                            decodeString = CodecUtil.decodeHex(RadixUtils.convertRadixString2To16(input),
-                                    charsets[sort - 1]);
-                        }
+                        String decodeString = convertRadixAndDecodeHex(input, charsets[sort - 1]);
                         encodeTextField.setText(decodeString);
                         if (codeType_Decode.equals(curCodeType)) {
                             encodeTextField.setText("\"" + codeType_Decode + "\"与Encode String无关！");
@@ -325,6 +313,60 @@ public class CharacterConverter extends GuiJPanel {
     }
 
     /**
+     * 转换未16进制字符并decode.
+     */
+    private String convertRadixAndDecodeHex(String input, String charset) throws UnsupportedEncodingException, DecoderException {
+        if (input == null || curPrefix.length() == 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        String spliter = (curPrefix.startsWith("\\") ? ("\\") : "") + curPrefix;
+        String[] splits = input.split(spliter);
+        StringBuilder radix16Sb = new StringBuilder();
+        sb.append(splits[0]);
+        for (int i = 1; i < splits.length; i++) {
+            String split = splits[i];
+            String[] radix16Arr = new String[]{"", ""};
+            if (codeType_16Radix.equals(curCodeType)) {
+                radix16Arr = radix16AndNoneRadix16Str(split, 2);
+            } else if (codeType_10Radix.equals(curCodeType) || codeType_8Radix.equals(curCodeType)) {
+                radix16Arr = radix16AndNoneRadix16Str(split, 3);
+            } else if (codeType_2Radix.equals(curCodeType)) {
+                radix16Arr = radix16AndNoneRadix16Str(split, 8);
+            }
+            radix16Sb.append(radix16Arr[0]);
+            if (radix16Arr[1].length() != 0) {
+                sb.append(CodecUtil.decodeHex(radix16Sb.toString(), charset)).append(radix16Arr[1]);
+                radix16Sb = new StringBuilder();
+            }
+        }
+        sb.append(CodecUtil.decodeHex(radix16Sb.toString(), charset));
+        return sb.toString();
+    }
+
+    /**
+     * 取单split字符中编码和非编码的两部分.
+     */
+    private String[] radix16AndNoneRadix16Str(String split, int subLen) {
+        String radix16Str = "";
+        String noneRadix16Str = "";
+        if (split.length() >= subLen) {
+            radix16Str = split.substring(0, subLen);
+            if (codeType_10Radix.equals(curCodeType)) {
+                radix16Str = RadixUtils.convertRadixString10To16(radix16Str);
+            } else if (codeType_8Radix.equals(curCodeType)) {
+                radix16Str = RadixUtils.convertRadixString8To16(radix16Str);
+            } else if (codeType_2Radix.equals(curCodeType)) {
+                radix16Str = RadixUtils.convertRadixString2To16(radix16Str);
+            }
+            noneRadix16Str = split.substring(subLen);
+        } else {
+            noneRadix16Str = split;
+        }
+        return new String[]{radix16Str, noneRadix16Str};
+    }
+
+    /**
      * 字符编码进制前缀字符填充 - 16进制.
      */
     private String encode16RadixAddPrefix(String input, String charset, String prefix)
@@ -332,7 +374,7 @@ public class CharacterConverter extends GuiJPanel {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
             // CodecUtil.encodeHex 转16进制
-            sb.append(prefix).append(CodecUtil.encodeHex(input.substring(i, i + 1), charset));
+            sb.append(appendPrefix(CodecUtil.encodeHex(input.substring(i, i + 1), charset), prefix, 2));
         }
         return sb.toString();
     }
@@ -344,8 +386,8 @@ public class CharacterConverter extends GuiJPanel {
             throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
-            sb.append(prefix).append(
-                    RadixUtils.convertRadixString16To10(CodecUtil.encodeHex(input.substring(i, i + 1), charset)));
+            sb.append(appendPrefix(
+                    RadixUtils.convertRadixString16To10(CodecUtil.encodeHex(input.substring(i, i + 1), charset)), prefix, 3));
         }
         return sb.toString();
     }
@@ -357,8 +399,8 @@ public class CharacterConverter extends GuiJPanel {
             throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
-            sb.append(prefix).append(
-                    RadixUtils.convertRadixString16To8(CodecUtil.encodeHex(input.substring(i, i + 1), charset)));
+            sb.append(appendPrefix(
+                    RadixUtils.convertRadixString16To8(CodecUtil.encodeHex(input.substring(i, i + 1), charset)), prefix, 3));
         }
         return sb.toString();
     }
@@ -370,8 +412,19 @@ public class CharacterConverter extends GuiJPanel {
             throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
-            sb.append(prefix).append(
-                    RadixUtils.convertRadixString16To2(CodecUtil.encodeHex(input.substring(i, i + 1), charset)));
+            sb.append(appendPrefix(
+                    RadixUtils.convertRadixString16To2(CodecUtil.encodeHex(input.substring(i, i + 1), charset)), prefix, 8));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 按单字节补充前缀字符.
+     */
+    private String appendPrefix(String str, String prefix, int len) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length() / len; i++) {
+            sb.append(prefix).append(str.substring(i * len, (i + 1) * len));
         }
         return sb.toString();
     }
