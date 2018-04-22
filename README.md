@@ -173,4 +173,4 @@ Java GUI实用小工具集 Common Gui Tools
 <br />微信
 ![Donate weixin](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/donate/weixin.png)
 <br />支付宝
-![Donate weixin](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/donate/alipay.png)
+![Donate alipay](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/donate/alipay.jpg)
