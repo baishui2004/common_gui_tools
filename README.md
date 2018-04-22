@@ -47,6 +47,14 @@ Java GUI实用小工具集 Common Gui Tools
 
 
 
+<br /><b>开发说明：</b> 
+<pre>
+1，启动类：bs.tool.commongui.GuiMain，参见：src/main/MANIFEST.MF；
+2，本地开发运行前先执行mvn clean package，以将src/main/sources下资源拷贝到target，否则运行时会找不到配置文件及图片；
+</pre>
+
+
+
 <br /><br /><b>下面逐个简单简绍每个小工具：</b> 打开软件后可通过菜单栏Tools、More Tools选择工具显示，通过各工具的关闭按钮或菜单栏再次点击工具关闭显示。
 <br />
 <br /><b>1，<a id="Character Converter">编码转换：Character Converter</a></b>
