@@ -373,6 +373,7 @@ public class GuiUtils {
      * @param e 异常
      */
     public static void log(Exception e) {
+        e.printStackTrace();
         logger.error("", e);
         StackTraceElement[] ste = e.getStackTrace();
         StringBuilder esb = new StringBuilder();
@@ -390,6 +391,7 @@ public class GuiUtils {
      * @param e   异常
      */
     public static void log(String msg, Exception e) {
+        e.printStackTrace();
         logger.error(msg, e);
         log(msg);
         log(e.getMessage());
