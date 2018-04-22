@@ -15,27 +15,15 @@
             <outputDirectory>/img</outputDirectory>
         </fileSet>
         <fileSet>
+            <directory>${project.basedir}/src/main/sources/lib/</directory>
+            <outputDirectory>/lib</outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>${project.basedir}/src/main/sources/bin</directory>
             <outputDirectory>/</outputDirectory>
         </fileSet>
     </fileSets>
     <files>
-        <file>
-            <source>${project.basedir}/src/main/sources/lib/DJNativeSwing-1.0.3-20140708.jar</source>
-            <outputDirectory>/lib</outputDirectory>
-        </file>
-        <file>
-            <source>${project.basedir}/src/main/sources/lib/DJNativeSwing-SWT-1.0.3-20140708.jar</source>
-            <outputDirectory>/lib</outputDirectory>
-        </file>
-        <file>
-            <source>${project.basedir}/src/main/sources/lib/jnotify-0.94_improve-1.0.jar</source>
-            <outputDirectory>/lib</outputDirectory>
-        </file>
-        <file>
-            <source>${project.basedir}/src/main/sources/lib/ZHConverter.jar</source>
-            <outputDirectory>/lib</outputDirectory>
-        </file>
         <file>
             <source>${project.basedir}/LICENSE</source>
             <outputDirectory>/</outputDirectory>
