@@ -1,7 +1,7 @@
 Java GUI实用小工具集 Common Gui Tools
 =====================================
 
-<a href="https://github.com/baishui2004/common_gui_tools" target="_blank">Common Gui Tools</a> 是用java编写，GUI界面的实用小工具集，1.4版有18个小工具：
+<a href="https://github.com/baishui2004/common_gui_tools" target="_blank">Common Gui Tools</a> 是用java编写，GUI界面的实用小工具集，1.4版有20个小工具：
 
 <pre>
 1，<a href="#Character Converter">编码转换：Character Converter</a>
@@ -13,12 +13,19 @@ Java GUI实用小工具集 Common Gui Tools
 7，<a href="#Ant Script Auto Build">Ant脚本自动build：Ant Script Auto Build</a>
 8，<a href="#Class Finder">Java类查找：Class Finder，查找本地的*.class或*.java</a>
 9，<a href="#Color Tool">颜色工具：Color Tool</a>
-10，<a href="#System Information">运行环境信息：System Information</a>
-11，<a href="#JODConverter Visual">OpenOffice文档转换JODConverter Visual，需Openoffice后台服务支持</a>
-12，<a href="#JNotify Visual">文件(夹)变化监控：JNotify Visual</a>
-13，<a href="#JUniversal Chardet">文本编码识别：JUniversal Chardet</a>
+10，<a href="#Time Tool">时间工具：Time Tool</a>
+11，<a href="#System Information">运行环境信息：System Information</a>
+12，<a href="#QrCode Converter">二维码转换：QrCode Converter</a>
+13，<a href="#Code Formatter">Code格式化：Code Formatter</a>
 14，<a href="#ZHConverter Visual">中文简体繁体互转：ZHConverter Visual</a>
 15，<a href="#Escape Character Tool">字符转义工具：Escape Character Tool</a>
+16，<a href="#JNotify Visual">文件(夹)变化监控：JNotify Visual</a>
+17，<a href="#JUniversal Chardet">文本编码识别：JUniversal Chardet</a>
+18，<a href="#Text File Split">文本文件切分：Text File Split</a>
+19，<a href="#JODConverter Visual">OpenOffice文档转换JODConverter Visual，需Openoffice后台服务支持</a>
+20，<a href="#Simple Webview">简易Webview：Simple Webview</a>
+
+    <a href="#Donate">捐助本项目：支持长远发展，感谢您的认可！</a>
 </pre>
 
    欢迎您使用并提供宝贵意见！
@@ -31,10 +38,10 @@ Java GUI实用小工具集 Common Gui Tools
 
 <br /><b>配置说明：</b> 
 <pre>
-1，本软件采用插件方式，13个小工具即是13个插件，插件配置文件夹conf，
+1，本软件采用插件方式，20个小工具即是20个插件，插件配置文件夹conf，
    配置文件有：common_gui_tools.properties、more_tools.properties以及多个插件的配置；
 2，相关配置说明参看各配置文件，可通过修改文件common_gui_tools.properties中属性CommonUseTools修改常用插件;
-   默认加载插件Encrypt And Decrypt、Folder And File Operate及Class Finder； 
+   默认加载插件Encrypt And Decrypt、Time Tool、QrCode Converter、Code Formatter； 
 3，可通过GUISkin属性修改软件皮肤，fontStyles系列属性修改显示字体。
 </pre>
 
@@ -97,32 +104,27 @@ Java GUI实用小工具集 Common Gui Tools
 <br />
 ![Color Tool](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Color%20Tool.png)
 
-<b>10，<a id="System Information">运行环境信息：System Information</a></b>
+<b>10，<a id="Time Tool">时间工具：Time Tool</a></b>
+<br />时间字符串与时间戳的相互转换。
+<br />
+![Time Tool](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Time%20Tool.png)
+
+<b>11，<a id="System Information">运行环境信息：System Information</a></b>
 <br />此工具可查看运行机器的Overview(基础信息)、Running Status、System Properties、支持的字符集、字体。
 <br />
 ![System Information](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/System%20Information.png)
 
-<b>11，<a id="JODConverter Visual">OpenOffice文档转换JODConverter Visual，需Openoffice后台服务支持</a></b>
-<br />可视化文档转换，支持常见文档的相互转换，如doc/docx转pdf、rtf、text、html，xls/xlsx转pdf、csv、tsv、html，支持的详细转换类型具体参见插件。
+<b>12，<a id="QrCode Converter">二维码转换：QrCode Converter</a></b>
+<br />二维码生成、解析。
 <br />
-![JODConverter Visual](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/JODConverter%20Visual.png)
-<br />测试OpenOffice版本：3.4
-<br />配置文件：conf/JODConverterVisual/converter.properties
-<br />转换文档：<a href="http://www.artofsolving.com/opensource/jodconverter/guide/supportedformats" target="_blank">Supported Formats</a>&emsp;&nbsp;<a href="http://www.liferay.com/zh/community/wiki/-/wiki/Main/Document+Conversion+with+OpenOffice" target="_blank">Document Conversion with OpenOffice</a>
+![QrCode Converter](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/QrCode%20Converter.png)
+<br />项目：<a href="https://github.com/zxing/zxing" target="_blank">zxing</a>
 
-<b>12，<a id="JNotify Visual">文件(夹)变化监控：JNotify Visual</a></b>
-<br />使用JNotify监控文件(夹)增删改及重命名。
+<b>13，<a id="Code Formatter">Code格式化：Code Formatter</a></b>
+<br />代码格式化，目前仅支持Json。
 <br />
-![JNotify Visual](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/JNotify%20Visual.png)
-<br />关于JNotify Visual使用的类包<a href="http://improve-lgpl-jars.googlecode.com/files/jnotify-0.94_improve-1.0.jar">jnotify-0.94_improve-1.0.jar</a>，改进自<a href="http://sourceforge.net/projects/jnotify/" target="_blank">jnotify-0.94</a>，项目地址<a href="http://code.google.com/p/improve-lgpl-jars/" target="_blank">http://code.google.com/p/improve-lgpl-jars/</a>
-
-<b>13，<a id="JUniversal Chardet">文本编码识别：JUniversal Chardet</a></b>
-<br />检测文件编码，识别准确率高（有一定的误差）。
-<br />
-![JUniversal Chardet](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/JUniversal%20Chardet.png)
-<br />项目：<a href="https://code.google.com/p/juniversalchardet/" target="_blank">juniversalchardet</a>
-<br />文档：<a href="http://www-archive.mozilla.org/projects/intl/UniversalCharsetDetection.html" target="_blank">Mozilla UniversalCharsetDetection</a>
-<br />其他编码识别项目：<a href="http://sourceforge.net/projects/jchardet/" target="_blank">jchardet</a>&emsp;&nbsp;<a href="http://sourceforge.net/projects/cpdetector/" target="_blank">cpdetector</a>&emsp;&nbsp;<a href="http://wing.comp.nus.edu.sg/~tanyeefa/downloads/charsetdetectstreamreader/" target="_blank">Charset Detect Stream Reader</a>
+![Code Formatter](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Code%20Formatter.png)
+<br />项目：<a href="https://github.com/google/gson" target="_blank">gson</a>
 
 <b>14，<a id="ZHConverter Visual">中文简体繁体互转：ZHConverter Visual</a></b>
 <br />
@@ -133,3 +135,42 @@ Java GUI实用小工具集 Common Gui Tools
 <br />HTML、XML、JAVA、JavaScript、CSV字符转义字符及还原，使用Apache Commons-lang的StringEscapeUtils类。
 <br />
 ![Escape Character Tool](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Escape%20Character%20Tool.png)
+
+<b>16，<a id="JNotify Visual">文件(夹)变化监控：JNotify Visual</a></b>
+<br />使用JNotify监控文件(夹)增删改及重命名。
+<br />
+![JNotify Visual](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/JNotify%20Visual.png)
+<br />关于JNotify Visual使用的类包<a href="http://improve-lgpl-jars.googlecode.com/files/jnotify-0.94_improve-1.0.jar">jnotify-0.94_improve-1.0.jar</a>，改进自<a href="http://sourceforge.net/projects/jnotify/" target="_blank">jnotify-0.94</a>，项目地址<a href="http://code.google.com/p/improve-lgpl-jars/" target="_blank">http://code.google.com/p/improve-lgpl-jars/</a>
+
+<b>17，<a id="JUniversal Chardet">文本编码识别：JUniversal Chardet</a></b>
+<br />检测文件编码，识别准确率高（有一定的误差）。
+<br />
+![JUniversal Chardet](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/JUniversal%20Chardet.png)
+<br />项目：<a href="https://code.google.com/p/juniversalchardet/" target="_blank">juniversalchardet</a>
+<br />文档：<a href="http://www-archive.mozilla.org/projects/intl/UniversalCharsetDetection.html" target="_blank">Mozilla UniversalCharsetDetection</a>
+<br />其他编码识别项目：<a href="http://sourceforge.net/projects/jchardet/" target="_blank">jchardet</a>&emsp;&nbsp;<a href="http://sourceforge.net/projects/cpdetector/" target="_blank">cpdetector</a>&emsp;&nbsp;<a href="http://wing.comp.nus.edu.sg/~tanyeefa/downloads/charsetdetectstreamreader/" target="_blank">Charset Detect Stream Reader</a>
+
+<b>18，<a id="Text File Split">文本文件切分：Text File Split</a></b>
+<br />按大小或行数切分文件。
+<br />
+![Text File Split](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Text%20File%20Split.png)
+
+<b>19，<a id="JODConverter Visual">OpenOffice文档转换JODConverter Visual，需Openoffice后台服务支持</a></b>
+<br />可视化文档转换，支持常见文档的相互转换，如doc/docx转pdf、rtf、text、html，xls/xlsx转pdf、csv、tsv、html，支持的详细转换类型具体参见插件。
+<br />
+![JODConverter Visual](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/JODConverter%20Visual.png)
+<br />测试OpenOffice版本：3.4
+<br />配置文件：conf/JODConverterVisual/converter.properties
+<br />转换文档：<a href="http://www.artofsolving.com/opensource/jodconverter/guide/supportedformats" target="_blank">Supported Formats</a>&emsp;&nbsp;<a href="http://www.liferay.com/zh/community/wiki/-/wiki/Main/Document+Conversion+with+OpenOffice" target="_blank">Document Conversion with OpenOffice</a>
+
+<b>20，<a id="Simple Webview">简易Webview：Simple Webview</a></b>
+<br />
+![Simple Webview](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/Simple%20Webview.png)
+<br />项目：<a href="https://sourceforge.net/projects/djproject/files/DJ Native Swing/" target="_blank">The DJ Project</a>
+
+<b><a id="Donate">捐助本项目：支持长远发展，感谢您的认可！</a></b>
+<br />
+<br />微信
+![Donate weixin](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/donate/weixin.png)
+<br />支付宝
+![Donate weixin](https://raw.githubusercontent.com/baishui2004/common_gui_tools/master/documention/images/donate/alipay.png)
