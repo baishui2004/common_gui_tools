@@ -64,7 +64,7 @@ public class CharacterConverter extends GuiJPanel {
     /**
      * 进制前缀符.
      */
-    private String[] prefixs = new String[]{"空格", "空", "-", "%", "\\u", "\\x"};
+    private String[] prefixs = new String[]{"\\u", "\\x", "%", "-", "空格", "空"};
 
     /**
      * 进制前缀符下拉框.
@@ -84,9 +84,9 @@ public class CharacterConverter extends GuiJPanel {
      * 获取正确的前缀符.
      */
     private String getCorrectSeparator(String separ) {
-        if (prefixs[0].equals(separ)) {
+        if ("空格".equals(separ)) {
             return " ";
-        } else if (prefixs[1].equals(separ)) {
+        } else if ("空".equals(separ)) {
             return "";
         } else {
             return separ;
@@ -111,6 +111,16 @@ public class CharacterConverter extends GuiJPanel {
      * 当前进制编码大小写.
      */
     private String curLowUpCase = lowUpCase[0];
+
+    /**
+     * 分隔字节数.
+     */
+    private String[] splitByte = new String[]{"1", "2"};
+
+    /**
+     * 当前分隔字节数.
+     */
+    private int curSplitByte = Integer.parseInt(splitByte[0]);
 
     /**
      * 字符集.
@@ -204,6 +214,13 @@ public class CharacterConverter extends GuiJPanel {
         addJLabel(flowComboxPanel, " 进制大小写:", GuiUtils.font14_cn);
         // 进制编码大小写下拉框
         flowComboxPanel.add(lowUpCaseBox);
+        addJLabel(flowComboxPanel, " 分隔字节数:", GuiUtils.font14_cn);
+        // 分隔字节数下拉框
+        flowComboxPanel.add(createJComboBox(splitByte, GuiUtils.font14_cn, new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                curSplitByte = Integer.parseInt(((JComboBox) event.getSource()).getSelectedItem().toString());
+            }
+        }));
         addJLabel(flowComboxPanel, "   ", GuiUtils.font14_cn);
         addJButton(flowComboxPanel, "清除输入输出", "clear", GuiUtils.font14_cn, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -316,8 +333,11 @@ public class CharacterConverter extends GuiJPanel {
      * 转换未16进制字符并decode.
      */
     private String convertRadixAndDecodeHex(String input, String charset) throws UnsupportedEncodingException, DecoderException {
-        if (input == null || curPrefix.length() == 0) {
+        if (input == null || input.length() == 0) {
             return "";
+        }
+        if (curPrefix.length() == 0) {
+            return CodecUtil.decodeHex(input.toString(), charset);
         }
         StringBuilder sb = new StringBuilder();
         String spliter = (curPrefix.startsWith("\\") ? ("\\") : "") + curPrefix;
@@ -350,6 +370,7 @@ public class CharacterConverter extends GuiJPanel {
     private String[] radix16AndNoneRadix16Str(String split, int subLen) {
         String radix16Str = "";
         String noneRadix16Str = "";
+        subLen = subLen * curSplitByte;
         if (split.length() >= subLen) {
             radix16Str = split.substring(0, subLen);
             if (codeType_10Radix.equals(curCodeType)) {
@@ -423,6 +444,7 @@ public class CharacterConverter extends GuiJPanel {
      */
     private String appendPrefix(String str, String prefix, int len) {
         StringBuilder sb = new StringBuilder();
+        len = len * curSplitByte;
         for (int i = 0; i < str.length() / len; i++) {
             sb.append(prefix).append(str.substring(i * len, (i + 1) * len));
         }

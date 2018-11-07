@@ -285,14 +285,16 @@ public class TextFileSplit extends GuiJPanel {
         File splitFile = new File(splitResultDirectory + "/" + splitFileName);
         int lineCnt = 0;
         List<String> lines;
+        List<String> writeLines =  new ArrayList<String>();
         while ((lines = iteratorLine(lineIterator, 100, splitLength, lineCnt)).size() != 0) {
-            lineCnt = lines.size();
-            org.apache.commons.io.FileUtils.writeLines(splitFile, targetEncoding, lines);
+            lineCnt += lines.size();
+            writeLines.addAll(lines);
             if (currentSplitType.equals(GuiUtils.SPLIT_TYPE_SIZE) && splitFile.getTotalSpace() >= splitLength * 1024 * 1024) {
                 break;
             }
         }
-        if (splitFile.getTotalSpace() != 0) {
+        if (writeLines.size() != 0) {
+            org.apache.commons.io.FileUtils.writeLines(splitFile, targetEncoding, writeLines);
             return splitFile.getAbsolutePath();
         } else {
             return null;
