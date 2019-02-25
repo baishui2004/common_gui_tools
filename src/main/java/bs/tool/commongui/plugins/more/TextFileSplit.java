@@ -15,8 +15,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * 文本文件切分.
@@ -84,6 +84,20 @@ public class TextFileSplit extends GuiJPanel {
      * 切分结果文件编码.
      */
     private JTextField targetEncodingField = new JTextField(GuiUtils.CHARSET_UTF_8, 6);
+
+    /**
+     * 行分隔符.
+     */
+    private String[] lineSeparators = new String[]{"\\n", "\\r\\n", "\\r"};
+    private Map<String, String> lineSeparatorsMap = new HashMap<String, String>() {{
+        put("\\n", "\n");
+        put("\\r\\n", "\r\n");
+        put("\\r", "\r");
+    }};
+    /**
+     * 当期行分隔符.
+     */
+    private String currentLineSeparator = lineSeparatorsMap.get(lineSeparators[0]);
 
     /**
      * 切分结果文本域.
@@ -236,6 +250,13 @@ public class TextFileSplit extends GuiJPanel {
         advanceConditionPanel.add(sourceEncodingField);
         addJLabel(advanceConditionPanel, " 切分结果文件编码:", GuiUtils.font14_cn);
         advanceConditionPanel.add(targetEncodingField);
+        addJLabel(advanceConditionPanel, " 行分隔符:", GuiUtils.font14_cn);
+        // 行分隔符下拉框
+        addJComboBox(advanceConditionPanel, lineSeparators, GuiUtils.font13, new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                currentLineSeparator = lineSeparatorsMap.get(((JComboBox) event.getSource()).getSelectedItem().toString());
+            }
+        });
         inputPanel.add(advanceConditionPanel);
 
         add(inputPanel, BorderLayout.NORTH);
@@ -271,7 +292,7 @@ public class TextFileSplit extends GuiJPanel {
         String fileType = fileName.substring(lastIndex + 1, fileName.length());
         String rs;
         int fileNum = 1;
-        while ((rs = loopSplitFile(lineIterator, splitLength, fileSimpleName + " - " + (fileNum++) + (fileType.length() != 0 ? "." : "") + fileType, targetEncoding)) != null) {
+        while ((rs = loopSplitFile(lineIterator, splitLength, fileSimpleName + "_" + (fileNum++) + (fileType.length() != 0 ? "." : "") + fileType, targetEncoding)) != null) {
             if (rsb.length() != 0) {
                 rsb.append("            ");
             }
@@ -285,7 +306,7 @@ public class TextFileSplit extends GuiJPanel {
         File splitFile = new File(splitResultDirectory + "/" + splitFileName);
         int lineCnt = 0;
         List<String> lines;
-        List<String> writeLines =  new ArrayList<String>();
+        List<String> writeLines = new ArrayList<String>();
         while ((lines = iteratorLine(lineIterator, 100, splitLength, lineCnt)).size() != 0) {
             lineCnt += lines.size();
             writeLines.addAll(lines);
@@ -294,7 +315,7 @@ public class TextFileSplit extends GuiJPanel {
             }
         }
         if (writeLines.size() != 0) {
-            org.apache.commons.io.FileUtils.writeLines(splitFile, targetEncoding, writeLines);
+            org.apache.commons.io.FileUtils.writeLines(splitFile, targetEncoding, writeLines, currentLineSeparator);
             return splitFile.getAbsolutePath();
         } else {
             return null;
