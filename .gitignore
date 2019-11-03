@@ -3,4 +3,6 @@ target
 *.iml
 *.ipr
 *.iws
+.DS_Store
+dest/.DS_Store
 common_gui_tools.log
