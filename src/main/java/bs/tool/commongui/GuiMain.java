@@ -3,12 +3,10 @@ package bs.tool.commongui;
 import bs.util.io.PropertiesUtils;
 
 import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
@@ -114,10 +112,33 @@ public class GuiMain extends JFrame {
                     UIManager.setLookAndFeel(lookAndFeel);
                     JFrame.setDefaultLookAndFeelDecorated(true);
                     JDialog.setDefaultLookAndFeelDecorated(true);
+                    setMacCommandCopyPaste();
                     return true;
                 } catch (Exception e) {
                     GuiUtils.log(e);
                     return false;
+                }
+            }
+
+            // How to use Command-c/Command-v shortcut in Mac to copy/paste text?
+            // https://stackoverflow.com/questions/7252749/how-to-use-command-c-command-v-shortcut-in-mac-to-copy-paste-text
+            private void setMacCommandCopyPaste() {
+                if (System.getProperty("os.name").contains("Mac")) {
+                    try {
+                        InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
+                        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
+                        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+                        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+                        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+
+                        InputMap tim = (InputMap) UIManager.get("TextArea.focusInputMap");
+                        tim.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
+                        tim.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+                        tim.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+                        tim.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+                    } catch (Exception e) {
+                        GuiUtils.log("", e);
+                    }
                 }
             }
         });
@@ -183,7 +204,18 @@ public class GuiMain extends JFrame {
         setLayout(new BorderLayout()); // 边界布局管理器
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Toolkit kit = Toolkit.getDefaultToolkit();
-        setIconImage(GuiUtils.getImage("img/icon/cgt_Icon.png", kit));
+        Image icon = GuiUtils.getImage("img/icon/cgt_Icon.png", kit);
+        String osName = System.getProperty("os.name");
+        // set mac dock icon
+        if (osName.contains("Mac")) {
+            try {
+                com.apple.eawt.Application app = com.apple.eawt.Application.getApplication();
+                app.setDockIconImage(icon);
+            } catch (Exception e) {
+                GuiUtils.log("", e);
+            }
+        }
+        setIconImage(icon);
 
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar); // 菜单工具条
