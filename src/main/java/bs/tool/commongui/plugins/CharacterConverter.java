@@ -1,6 +1,6 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import bs.tool.commongui.utils.RadixUtils;
 import bs.util.common.CodecUtil;
@@ -15,7 +15,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * 编码转换.
  */
-public class CharacterConverter extends GuiJPanel {
+public class CharacterConverter extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,35 +31,35 @@ public class CharacterConverter extends GuiJPanel {
     /**
      * 2进制.
      */
-    private String codeType_2Radix = "二进制";
+    private String codeType2Radix = "二进制";
     /**
      * 8进制.
      */
-    private String codeType_8Radix = "八进制";
+    private String codeType8Radix = "八进制";
     /**
      * 10进制.
      */
-    private String codeType_10Radix = "十进制";
+    private String codeType10Radix = "十进制";
     /**
      * 16进制.
      */
-    private String codeType_16Radix = "十六进制";
+    private String codeType16Radix = "十六进制";
 
     /**
      * 乱码解码.
      */
-    private String codeType_Decode = "乱码解码";
+    private String codeTypeDecode = "乱码解码";
 
     /**
      * 编解码类别.
      */
-    private String[] codeTypes = new String[]{codeType_2Radix, codeType_8Radix, codeType_10Radix, codeType_16Radix,
-            codeType_Decode};
+    private String[] codeTypes = new String[]{codeType2Radix, codeType8Radix, codeType10Radix, codeType16Radix,
+            codeTypeDecode};
 
     /**
      * 当前编码类别.
      */
-    private String curCodeType = codeType_16Radix;
+    private String curCodeType = codeType16Radix;
 
     /**
      * 进制前缀符.
@@ -70,6 +70,7 @@ public class CharacterConverter extends GuiJPanel {
      * 进制前缀符下拉框.
      */
     private JComboBox prefixsBox = createJComboBox(prefixs, GuiUtils.font14_cn, new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent event) {
             curPrefix = getCorrectSeparator(((JComboBox) event.getSource()).getSelectedItem().toString());
         }
@@ -102,6 +103,7 @@ public class CharacterConverter extends GuiJPanel {
      * 进制编码大小写下拉框.
      */
     private JComboBox lowUpCaseBox = createJComboBox(lowUpCase, GuiUtils.font14_cn, new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent event) {
             curLowUpCase = ((JComboBox) event.getSource()).getSelectedItem().toString();
         }
@@ -171,7 +173,8 @@ public class CharacterConverter extends GuiJPanel {
 
         // 左侧：放置Label
         addJLabel(labelsPanel, " Encode String: ", GuiUtils.font16);
-        addJLabel(labelsPanel, " ", GuiUtils.font16); // 仅作填充
+        // 仅作填充
+        addJLabel(labelsPanel, " ", GuiUtils.font16);
         for (int i = 0; i < fields.length - 1; i++) {
             addJLabel(labelsPanel, " " + charsets[i] + ": ", GuiUtils.font16);
         }
@@ -192,9 +195,10 @@ public class CharacterConverter extends GuiJPanel {
         addJLabel(flowComboxPanel, "编码类别:", GuiUtils.font14_cn);
         // 编码类别下拉框，默认选择16进制
         addJComboBox(flowComboxPanel, codeTypes, 3, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 curCodeType = ((JComboBox) event.getSource()).getSelectedItem().toString();
-                if (codeType_Decode.equals(curCodeType)) {
+                if (codeTypeDecode.equals(curCodeType)) {
                     encodeTextField.setEnabled(false);
                     encodeButton.setEnabled(false);
                     prefixsBox.setEnabled(false);
@@ -217,12 +221,14 @@ public class CharacterConverter extends GuiJPanel {
         addJLabel(flowComboxPanel, " 分隔字节数:", GuiUtils.font14_cn);
         // 分隔字节数下拉框
         flowComboxPanel.add(createJComboBox(splitByte, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 curSplitByte = Integer.parseInt(((JComboBox) event.getSource()).getSelectedItem().toString());
             }
         }));
         addJLabel(flowComboxPanel, "   ", GuiUtils.font14_cn);
         addJButton(flowComboxPanel, "清除输入输出", "clear", GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 clearTextFields();
             }
@@ -231,7 +237,8 @@ public class CharacterConverter extends GuiJPanel {
         // 右侧：放置按钮
         encodeButton.addActionListener(getButtonActionListener(0));
         buttonsPanel.add(encodeButton);
-        addJLabel(buttonsPanel, " ", GuiUtils.font16); // 仅作填充
+        // 仅作填充
+        addJLabel(buttonsPanel, " ", GuiUtils.font16);
         for (int i = 0; i < fields.length; i++) {
             addJButton(buttonsPanel, "Decode", Integer.toString(i + 1), GuiUtils.font16, getButtonActionListener(i + 1));
         }
@@ -252,6 +259,7 @@ public class CharacterConverter extends GuiJPanel {
      */
     private ActionListener getButtonActionListener(int current) {
         return new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 // 手动输入的字符编码
                 charsets[charsets.length - 1] = customCharsetField.getText().trim();
@@ -265,13 +273,13 @@ public class CharacterConverter extends GuiJPanel {
                     }
                     for (int i = 0; i < fields.length; i++) {
                         try {
-                            if (codeType_16Radix.equals(curCodeType)) {
+                            if (codeType16Radix.equals(curCodeType)) {
                                 fields[i].setText(encode16RadixAddPrefix(input, charsets[i], curPrefix));
-                            } else if (codeType_10Radix.equals(curCodeType)) {
+                            } else if (codeType10Radix.equals(curCodeType)) {
                                 fields[i].setText(encode10RadixAddPrefix(input, charsets[i], curPrefix));
-                            } else if (codeType_8Radix.equals(curCodeType)) {
+                            } else if (codeType8Radix.equals(curCodeType)) {
                                 fields[i].setText(encode8RadixAddPrefix(input, charsets[i], curPrefix));
-                            } else if (codeType_2Radix.equals(curCodeType)) {
+                            } else if (codeType2Radix.equals(curCodeType)) {
                                 fields[i].setText(encode2RadixAddPrefix(input, charsets[i], curPrefix));
                             }
                         } catch (Exception e) {
@@ -289,20 +297,20 @@ public class CharacterConverter extends GuiJPanel {
                     try {
                         String decodeString = convertRadixAndDecodeHex(input, charsets[sort - 1]);
                         encodeTextField.setText(decodeString);
-                        if (codeType_Decode.equals(curCodeType)) {
-                            encodeTextField.setText("\"" + codeType_Decode + "\"与Encode String无关！");
+                        if (codeTypeDecode.equals(curCodeType)) {
+                            encodeTextField.setText("\"" + codeTypeDecode + "\"与Encode String无关！");
                         }
                         for (int i = 0; i < fields.length; i++) {
                             if (i != sort - 1) {
-                                if (codeType_16Radix.equals(curCodeType)) {
+                                if (codeType16Radix.equals(curCodeType)) {
                                     fields[i].setText(encode16RadixAddPrefix(decodeString, charsets[i], curPrefix));
-                                } else if (codeType_10Radix.equals(curCodeType)) {
+                                } else if (codeType10Radix.equals(curCodeType)) {
                                     fields[i].setText(encode10RadixAddPrefix(decodeString, charsets[i], curPrefix));
-                                } else if (codeType_8Radix.equals(curCodeType)) {
+                                } else if (codeType8Radix.equals(curCodeType)) {
                                     fields[i].setText(encode8RadixAddPrefix(decodeString, charsets[i], curPrefix));
-                                } else if (codeType_2Radix.equals(curCodeType)) {
+                                } else if (codeType2Radix.equals(curCodeType)) {
                                     fields[i].setText(encode2RadixAddPrefix(decodeString, charsets[i], curPrefix));
-                                } else if (codeType_Decode.equals(curCodeType)) {
+                                } else if (codeTypeDecode.equals(curCodeType)) {
                                     fields[i].setText(GuiUtils.encode(input, charsets[sort - 1], charsets[i]));
                                 }
                             }
@@ -314,7 +322,7 @@ public class CharacterConverter extends GuiJPanel {
 
                 }
                 // 大小写
-                if (codeType_16Radix.equals(curCodeType) || codeType_2Radix.equals(curCodeType)) {
+                if (codeType16Radix.equals(curCodeType) || codeType2Radix.equals(curCodeType)) {
                     if (lowUpCase[0].equals(curLowUpCase)) {
                         for (int fi = 0; fi < fields.length; fi++) {
                             fields[fi].setText(fields[fi].getText().toLowerCase());
@@ -330,7 +338,7 @@ public class CharacterConverter extends GuiJPanel {
     }
 
     /**
-     * 转换未16进制字符并decode.
+     * 转换为16进制字符并decode.
      */
     private String convertRadixAndDecodeHex(String input, String charset) throws UnsupportedEncodingException, DecoderException {
         if (input == null || input.length() == 0) {
@@ -347,11 +355,11 @@ public class CharacterConverter extends GuiJPanel {
         for (int i = 1; i < splits.length; i++) {
             String split = splits[i];
             String[] radix16Arr = new String[]{"", ""};
-            if (codeType_16Radix.equals(curCodeType)) {
+            if (codeType16Radix.equals(curCodeType)) {
                 radix16Arr = radix16AndNoneRadix16Str(split, 2);
-            } else if (codeType_10Radix.equals(curCodeType) || codeType_8Radix.equals(curCodeType)) {
+            } else if (codeType10Radix.equals(curCodeType) || codeType8Radix.equals(curCodeType)) {
                 radix16Arr = radix16AndNoneRadix16Str(split, 3);
-            } else if (codeType_2Radix.equals(curCodeType)) {
+            } else if (codeType2Radix.equals(curCodeType)) {
                 radix16Arr = radix16AndNoneRadix16Str(split, 8);
             }
             radix16Sb.append(radix16Arr[0]);
@@ -373,11 +381,11 @@ public class CharacterConverter extends GuiJPanel {
         subLen = subLen * curSplitByte;
         if (split.length() >= subLen) {
             radix16Str = split.substring(0, subLen);
-            if (codeType_10Radix.equals(curCodeType)) {
+            if (codeType10Radix.equals(curCodeType)) {
                 radix16Str = RadixUtils.convertRadixString10To16(radix16Str);
-            } else if (codeType_8Radix.equals(curCodeType)) {
+            } else if (codeType8Radix.equals(curCodeType)) {
                 radix16Str = RadixUtils.convertRadixString8To16(radix16Str);
-            } else if (codeType_2Radix.equals(curCodeType)) {
+            } else if (codeType2Radix.equals(curCodeType)) {
                 radix16Str = RadixUtils.convertRadixString2To16(radix16Str);
             }
             noneRadix16Str = split.substring(subLen);

@@ -1,1 +1,1 @@
-start javaw -Xms48m -Djava.ext.dirs="%CD%\lib" -jar "%CD%\lib\bs-tool-cgt-1.4.jar"
+start javaw -Xms64m -Xmx256m -cp "%CD%\lib\*" bs.tool.commongui.GuiMain

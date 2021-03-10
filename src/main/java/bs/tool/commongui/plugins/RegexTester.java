@@ -1,7 +1,8 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import bs.util.io.PropertiesUtils;
 
 import javax.swing.*;
@@ -9,19 +10,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * 正则表达式验证.
  */
-public class RegexTester extends GuiJPanel {
+public class RegexTester extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -91,7 +91,8 @@ public class RegexTester extends GuiJPanel {
             for (String key : expressionsMap.keySet()) {
                 expsSortAndNames.add(key);
             }
-            Collections.sort(expsSortAndNames); // 排序
+            // 排序
+            Collections.sort(expsSortAndNames);
 
             int expSize = expsSortAndNames.size() + 1;
             expNames = new String[expSize];
@@ -141,8 +142,10 @@ public class RegexTester extends GuiJPanel {
 
         // 放置帮助按钮
         JPanel helpButtonPanel = new JPanel(new GridLayout(1, 2));
-        helpButtonPanel.add(new Panel());// 仅作填充
+        // 仅作填充
+        helpButtonPanel.add(new Panel());
         addJButton(helpButtonPanel, "帮助", "", GuiUtils.font13_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 showTextAreaMessage(helpText, "帮助", JOptionPane.INFORMATION_MESSAGE, null, null);
             }
@@ -157,6 +160,7 @@ public class RegexTester extends GuiJPanel {
             JPanel expressionsBoxPanel = new JPanel(new BorderLayout());
             addJLabel(expressionsBoxPanel, "  ", GuiUtils.font14_cn, BorderLayout.WEST);
             addJComboBox(expressionsBoxPanel, expNames, GuiUtils.font13_cn, new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent event) {
                     String exp = expsMap.get(((JComboBox) event.getSource()).getSelectedItem().toString());
                     if (exp != null) {
@@ -173,6 +177,7 @@ public class RegexTester extends GuiJPanel {
         // 是否忽略大小写
         JPanel ignoreCasePanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         addJCheckBox(ignoreCasePanel, "忽略大小写", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 ignoreCase = checkBox.isSelected();
@@ -182,6 +187,7 @@ public class RegexTester extends GuiJPanel {
         // 是否显示详细匹配
         JPanel viewDetailPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         addJCheckBox(viewDetailPanel, "显示详细匹配", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 viewDetail = checkBox.isSelected();
@@ -208,7 +214,8 @@ public class RegexTester extends GuiJPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1));
         actionPanel.add(buttonPanel, BorderLayout.SOUTH);
         // 加密按钮
-        addJButton(buttonPanel, "匹配", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonPanel, "匹配", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String regexText = regexTextArea.getText().trim();
                 String sourceText = sourceTextArea.getText().trim();
@@ -253,17 +260,9 @@ public class RegexTester extends GuiJPanel {
                 matchTextArea.setText(sb.length() > 0 ? sb.substring(1) : "");
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 matchTextArea.setText("");
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
             }
         });
     }

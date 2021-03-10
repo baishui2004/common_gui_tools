@@ -19,13 +19,15 @@ public class GuiUtils {
 
     private static Logger logger = LoggerFactory.getLogger(GuiUtils.class);
 
+
     /**************************** 编码 ****************************/
 
     // 下面两个转码结果一样
     public static String CHARSET_ISO_8859_1 = "ISO-8859-1";
     public static String CHARSET_US_ASCII = "US-ASCII";
 
-    public static String CHARSET_UTF_16BE = "UTF-16BE"; // java转义\ u后面跟的编码, 即Java Unicode转义字符
+    // java转义\ u后面跟的编码, 即Java Unicode转义字符
+    public static String CHARSET_UTF_16BE = "UTF-16BE";
     public static String CHARSET_UTF_16LE = "UTF-16LE";
 
     public static String CHARSET_UTF_8 = "UTF-8";
@@ -59,6 +61,8 @@ public class GuiUtils {
 
     /**************************** Code类型 ****************************/
     public static String CODE_TYPE_JSON = "JSON";
+    public static String CODE_TYPE_PROPERTIES = "Properties";
+    public static String CODE_TYPE_YML = "YML";
     public static String CODE_TYPE_XML = "XML";
     public static String CODE_TYPE_JAVA = "Java";
     public static String CODE_TYPE_JS = "JS";
@@ -72,6 +76,12 @@ public class GuiUtils {
     public static String SPLIT_TYPE_LINE = "Line";
 
     /**************************** Split类型 ****************************/
+
+    /**************************** 密码组合类型 ****************************/
+    public static String PASSWORD_COMBINATION_8_CHAR_NUM_SIMPLE = "8位字母数字[简单]";
+    public static String PASSWORD_COMBINATION_8_CHAR_NUM_POPULAR = "8位字母数字[复杂]";
+
+    /**************************** 密码组合类型 ****************************/
 
     /**
      * 所有字体.
@@ -317,7 +327,8 @@ public class GuiUtils {
      * 获取类加载路径下的图片.
      */
     public static Image getImageFromClassloader(String classLoaderImagePath, Toolkit kit) {
-        URL imgURL = ClassLoader.getSystemResource(classLoaderImagePath); // 这种方式可以从jar包中获取资源路径
+        // 这种方式可以从jar包中获取资源路径
+        URL imgURL = ClassLoader.getSystemResource(classLoaderImagePath);
         return kit.getImage(imgURL);
     }
 
@@ -341,7 +352,8 @@ public class GuiUtils {
         String path = "";
         try {
             path = GuiUtils.class.getClassLoader().getResource(classResource).getPath();
-            path = path.replace("+", "%2b"); // "+"号decode后为空格" "，"%2b"号decode后为"+"号
+            // "+"号decode后为空格" "，"%2b"号decode后为"+"号
+            path = path.replace("+", "%2b");
             path = URLDecoder.decode(path, "UTF-8");
             path = path.substring(0, path.length() - classResource.length());
             if (path.contains(".jar!")) {
@@ -390,7 +402,7 @@ public class GuiUtils {
      * @param msg 消息
      * @param e   异常
      */
-    public static void log(String msg, Exception e) {
+    public static void log(String msg, Throwable e) {
         e.printStackTrace();
         logger.error(msg, e);
         log(msg);
@@ -401,7 +413,7 @@ public class GuiUtils {
      * parseFalse, 有且仅当对象toString值equalsIgnoreCase("false")时返回false, 其他时候返回true.
      */
     public static boolean parseFalse(Object obj) {
-        return toString(obj).equalsIgnoreCase("false") ? false : true;
+        return "false".equalsIgnoreCase(toString(obj)) ? false : true;
     }
 
     /**
@@ -416,6 +428,17 @@ public class GuiUtils {
      */
     public static String toString(Object obj) {
         return obj == null ? "" : obj.toString();
+    }
+
+    /**
+     * is mac.
+     */
+    public static boolean IS_MAC = System.getProperty("os.name").contains("Mac");
+
+    public static void showAboutMessage(Toolkit kit, JPanel contextPanel, Map<String, String> propsMap) {
+        JOptionPane.showMessageDialog(contextPanel, "Version: " + propsMap.get("Version")
+                        + "\nAuthor: bs2004@163.com\nDevelop Date: " + propsMap.get("Develop_Date"), "About",
+                JOptionPane.INFORMATION_MESSAGE, GuiUtils.getIcon("img/icon/cgt_About.png", kit));
     }
 
 }

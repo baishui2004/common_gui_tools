@@ -1,9 +1,10 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import bs.tool.commongui.utils.FileUtils;
 import bs.tool.commongui.utils.SearchFileNameParams;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.swing.*;
@@ -11,7 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 计算文件数字签名.
  */
-public class FileDigitalSignature extends GuiJPanel {
+public class FileDigitalSignature extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -92,7 +92,8 @@ public class FileDigitalSignature extends GuiJPanel {
                 buttonBrowseListener(digitalPathChooser, digitalPathTextField));
         // 计算按钮
         digitalButton = createJButton("计算", "", GuiUtils.font14b_cn);
-        digitalButton.addMouseListener(new MouseListener() {
+        digitalButton.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String path = digitalPathTextField.getText().trim();
                 File file = new File(path);
@@ -126,22 +127,14 @@ public class FileDigitalSignature extends GuiJPanel {
                 digitalButton.setEnabled(true);
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 resultTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
         buttonFlowPanel.add(digitalButton);
-        // 路径选择控件
-        digitalPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
+        // 路径选择控件，可选择文件/文件夹
+        digitalPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         fileChooAndDetectPanel.add(buttonFlowPanel, BorderLayout.EAST);
         inputPanel.add(fileChooAndDetectPanel);
 
@@ -150,12 +143,14 @@ public class FileDigitalSignature extends GuiJPanel {
         addJLabel(advancePanel, " ", GuiUtils.font12_cn);
         // 是否计算MD5
         addJCheckBox(advancePanel, "MD5 ", true, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 ifDigitalMd5 = ((JCheckBox) event.getSource()).isSelected();
             }
         });
         // 是否计算SHA1
         addJCheckBox(advancePanel, "SHA1 ", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 ifDigitalSha1 = ((JCheckBox) event.getSource()).isSelected();
             }
@@ -169,6 +164,7 @@ public class FileDigitalSignature extends GuiJPanel {
         addJTextField(advancePanel, fileNameNotContainsTextField, GuiUtils.font14_un);
         // 是否支持正则
         addJCheckBox(advancePanel, "支持正则", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 fileNameSupportRegex = ((JCheckBox) event.getSource()).isSelected();
             }

@@ -1,9 +1,10 @@
 package bs.tool.commongui.plugins.more;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import bs.tool.commongui.utils.FileUtils;
 import bs.tool.commongui.utils.SearchFileNameParams;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import bs.util.io.PropertiesUtils;
 import org.apache.commons.io.LineIterator;
 
@@ -12,7 +13,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * 文本文件切分.
  */
-public class TextFileSplit extends GuiJPanel {
+public class TextFileSplit extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -127,7 +127,8 @@ public class TextFileSplit extends GuiJPanel {
                 buttonBrowseListener(splitPathChooser, splitPathTextField));
         // 切分按钮
         splitButton = createJButton("切分", "", GuiUtils.font14b_cn);
-        splitButton.addMouseListener(new MouseListener() {
+        splitButton.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String path = splitPathTextField.getText().trim();
                 File file = new File(path);
@@ -182,22 +183,14 @@ public class TextFileSplit extends GuiJPanel {
                 splitButton.setEnabled(true);
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 resultTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
         buttonFlowPanel.add(splitButton);
-        // 切分路径选择控件
-        splitPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
+        // 切分路径选择控件，可选择文件/文件夹
+        splitPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         fileChooAndSplitPanel.add(buttonFlowPanel, BorderLayout.EAST);
         inputPanel.add(fileChooAndSplitPanel);
 
@@ -209,6 +202,7 @@ public class TextFileSplit extends GuiJPanel {
         addJTextField(advancePanel, splitValueField, GuiUtils.font14_cn);
         // 切分型下拉框
         addJComboBox(advancePanel, splitTypes, GuiUtils.font13, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 currentSplitType = ((JComboBox) event.getSource()).getSelectedItem().toString();
             }
@@ -237,6 +231,7 @@ public class TextFileSplit extends GuiJPanel {
         addJTextField(advancePanel, fileNameNotContainsTextField, GuiUtils.font14_un);
         // 是否支持正则
         addJCheckBox(advancePanel, "支持正则", true, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 fileNameSupportRegex = ((JCheckBox) event.getSource()).isSelected();
             }
@@ -253,6 +248,7 @@ public class TextFileSplit extends GuiJPanel {
         addJLabel(advanceConditionPanel, " 行分隔符:", GuiUtils.font14_cn);
         // 行分隔符下拉框
         addJComboBox(advanceConditionPanel, lineSeparators, GuiUtils.font13, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 currentLineSeparator = lineSeparatorsMap.get(((JComboBox) event.getSource()).getSelectedItem().toString());
             }

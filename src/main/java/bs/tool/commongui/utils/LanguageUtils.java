@@ -25,7 +25,7 @@ public class LanguageUtils {
     /**
      * JavaScript.
      */
-    public static final String CONST_JavaScript = "JavaScript";
+    public static final String CONST_JAVASCRIPT = "JavaScript";
 
     /**
      * URI.

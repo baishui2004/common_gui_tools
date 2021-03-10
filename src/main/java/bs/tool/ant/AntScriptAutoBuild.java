@@ -206,7 +206,7 @@ public class AntScriptAutoBuild {
 
         if (mergerFile.exists()) {
             if (isBak) {
-                String reNameMergerFilePath = mergerFilePath + "." + new Date().getTime() + "bak";
+                String reNameMergerFilePath = mergerFilePath + "." + System.currentTimeMillis() + "bak";
                 File reNameMergerFile = new File(reNameMergerFilePath);
                 mergerFile.renameTo(reNameMergerFile);
                 print("old file \"" + mergerFile.getName() + "\" renamed to " + "\"" + reNameMergerFile.getName()
@@ -332,7 +332,8 @@ public class AntScriptAutoBuild {
         String path = "";
         try {
             path = AntScriptAutoBuild.class.getClassLoader().getResource(classResource).getPath();
-            path = path.replace("+", "%2b"); // "+"号decode后为空格" "，"%2b"号decode后为"+"号
+            // "+"号decode后为空格" "，"%2b"号decode后为"+"号
+            path = path.replace("+", "%2b");
             path = URLDecoder.decode(path, "UTF-8");
             path = path.substring(0, path.length() - classResource.length());
             if (path.contains(".jar!")) {

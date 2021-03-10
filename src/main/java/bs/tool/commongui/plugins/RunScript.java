@@ -1,7 +1,8 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
@@ -12,7 +13,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * 执行Script脚本.
  */
-public class RunScript extends GuiJPanel {
+public class RunScript extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -70,6 +70,7 @@ public class RunScript extends GuiJPanel {
         JPanel scriptTypesPanel = new JPanel(new FlowLayout());
         addJLabel(scriptTypesPanel, "脚本类型:", GuiUtils.font14b_cn);
         addJComboBox(scriptTypesPanel, scriptTypes, GuiUtils.font13, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 curScriptType = ((JComboBox) event.getSource()).getSelectedItem().toString();
             }
@@ -80,7 +81,8 @@ public class RunScript extends GuiJPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1));
         actionPanel.add(buttonPanel, BorderLayout.SOUTH);
         // 执行按钮
-        addJButton(buttonPanel, "执行", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonPanel, "执行", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String input = scriptTextArea.getText();
 
@@ -93,17 +95,9 @@ public class RunScript extends GuiJPanel {
                 }
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 resultTextArea.setText("");
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
             }
         });
     }

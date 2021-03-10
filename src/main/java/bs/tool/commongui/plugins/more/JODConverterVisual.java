@@ -1,9 +1,10 @@
 package bs.tool.commongui.plugins.more;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import bs.tool.commongui.utils.FileUtils;
 import bs.tool.commongui.utils.SearchFileNameParams;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import bs.util.io.PropertiesUtils;
 import com.artofsolving.jodconverter.DocumentConverter;
 import com.artofsolving.jodconverter.openoffice.connection.OpenOfficeConnection;
@@ -17,13 +18,13 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * OpenOffice文档转换.
  */
-public class JODConverterVisual extends GuiJPanel {
+public class JODConverterVisual extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -151,6 +152,7 @@ public class JODConverterVisual extends GuiJPanel {
         resetFileToBoxModel(fileToBoxModel, fromComboboxItems.split(",")[0]);
         final JComboBox fileFromBox = createJComboBox(fromComboboxItems.split(","), GuiUtils.font13_cn,
                 new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent event) {
                         fileFromType = ((JComboBox) event.getSource()).getSelectedItem().toString();
                         resetFileToBoxModel(fileToBoxModel, fileFromType);
@@ -160,6 +162,7 @@ public class JODConverterVisual extends GuiJPanel {
         final JComboBox fileToBox = new JComboBox(fileToBoxModel);
         fileToBox.setFont(GuiUtils.font12_cn);
         fileToBox.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 if (((JComboBox) event.getSource()).getSelectedItem() != null) {
                     fileToType = ((JComboBox) event.getSource()).getSelectedItem().toString();
@@ -175,21 +178,10 @@ public class JODConverterVisual extends GuiJPanel {
         JPanel fileChooPanel = new JPanel(new BorderLayout());
         fileChooPanel.add(new JPanel(), BorderLayout.NORTH);
         convertPathTextField.setEditable(false);
-        convertPathTextField.addMouseListener(new MouseListener() {
+        convertPathTextField.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent e) {
                 chooseConvertFile(fileFromBox);
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
             }
         });
         addJTextField(fileChooPanel, convertPathTextField, GuiUtils.font14_un, BorderLayout.CENTER);
@@ -198,13 +190,15 @@ public class JODConverterVisual extends GuiJPanel {
 
         JPanel buttonFlowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         addJButton(buttonFlowPanel, "浏览", "", GuiUtils.font12_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 chooseConvertFile(fileFromBox);
             }
         });
         // 转换按钮
         convertButton = createJButton("转换", "", GuiUtils.font14b_cn);
-        convertButton.addMouseListener(new MouseListener() {
+        convertButton.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 File convertFile = new File(convertPathTextField.getText().trim());
                 Map<String, Object> paramsMap = new HashMap<String, Object>();
@@ -228,6 +222,7 @@ public class JODConverterVisual extends GuiJPanel {
                 convertButton.setEnabled(true);
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 File convertFile = new File(convertPathTextField.getText().trim());
                 if (!convertFile.exists()) {
@@ -241,15 +236,6 @@ public class JODConverterVisual extends GuiJPanel {
                 }
                 resultTextArea.setText("开始转换，请稍候......\n\n");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
 
         // 转换文件格式 -> 目标文件格式
@@ -260,8 +246,8 @@ public class JODConverterVisual extends GuiJPanel {
 
         buttonFlowPanel.add(convertButton);
 
-        // 转换路径选择控件
-        convertPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
+        // 转换路径选择控件，可选择文件/文件夹
+        convertPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         fileChooAndDetectPanel.add(buttonFlowPanel, BorderLayout.EAST);
         inputPanel.add(fileChooAndDetectPanel);
 
@@ -272,21 +258,10 @@ public class JODConverterVisual extends GuiJPanel {
         JPanel convertFileChooPanel = new JPanel(new BorderLayout());
         convertFileChooPanel.add(new JPanel(), BorderLayout.NORTH);
         convertedPathTextField.setEditable(false);
-        convertedPathTextField.addMouseListener(new MouseListener() {
+        convertedPathTextField.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent e) {
                 chooseConvertedFolder();
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
             }
         });
         addJTextField(convertFileChooPanel, convertedPathTextField, GuiUtils.font14_un, BorderLayout.CENTER);
@@ -295,15 +270,17 @@ public class JODConverterVisual extends GuiJPanel {
         JPanel comboxButtonFlowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
         addJButton(comboxButtonFlowPanel, "浏览", "", GuiUtils.font12_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 chooseConvertedFolder();
             }
         });
-        // 目标路径选择控件
-        convertedPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 只可选择文件夹
+        // 目标路径选择控件，只可选择文件夹
+        convertedPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         // 目标文件名是否保留原始文件类型.
         addJCheckBox(comboxButtonFlowPanel, "文件名中保留原类型", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 keepOriginalFileType = ((JCheckBox) event.getSource()).isSelected();
             }
@@ -314,6 +291,7 @@ public class JODConverterVisual extends GuiJPanel {
         filesDealAsTxtBox.setFont(GuiUtils.font14_cn);
         filesDealAsTxtBox.setSelected(false);
         filesDealAsTxtBox.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 if (checkBox.isSelected()) {
@@ -337,6 +315,7 @@ public class JODConverterVisual extends GuiJPanel {
 
         // 展开/收缩高级(条件)按钮
         addJButton(comboxButtonFlowPanel, "高级", "", GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 advanceConditionPanel.setVisible(!advanceConditionPanel.isVisible());
                 getContextPanel().revalidate();
@@ -368,6 +347,7 @@ public class JODConverterVisual extends GuiJPanel {
         addJTextField(advanceConditionPanel, fileNameNotContainsTextField, GuiUtils.font14_un);
         // 是否支持正则
         addJCheckBox(advanceConditionPanel, "支持正则", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 fileNameSupportRegex = ((JCheckBox) event.getSource()).isSelected();
             }
@@ -450,7 +430,7 @@ public class JODConverterVisual extends GuiJPanel {
             File convertedFile = new File(convertedPath + File.separator + convertFileName + fileToType);
             convertNum++;
             String success = convertFile(convertFile, convertedFile, converter, resultTextArea, filesDealAsTxt);
-            if (success.equals("Success")) {
+            if ("Success".equals(success)) {
                 convertedNum++;
             }
             resultTextArea.append(convertFile.getAbsolutePath() + "         Convert: " + success + "\n");
@@ -468,7 +448,7 @@ public class JODConverterVisual extends GuiJPanel {
                     String success = convertFile(file,
                             new File(convertedPath + File.separator + fileName + fileToType), converter,
                             resultTextArea, filesDealAsTxt);
-                    if (success.equals("Success")) {
+                    if ("Success".equals(success)) {
                         convertedNum++;
                     }
                     resultTextArea.append(file.getAbsolutePath() + "         Convert: " + success + "\n");

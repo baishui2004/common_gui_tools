@@ -1,23 +1,23 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.lang.management.*;
 import java.nio.charset.Charset;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * 系统信息.
  */
-public class SystemInformation extends GuiJPanel {
+public class SystemInformation extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -49,12 +49,14 @@ public class SystemInformation extends GuiJPanel {
         addJLabel(topPanel, "Search Type:", GuiUtils.font14b);
         // 查询类别下拉框
         addJComboBox(topPanel, searchTypes, GuiUtils.font13, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 curSearchType = ((JComboBox) event.getSource()).getSelectedItem().toString();
             }
         });
         addJLabel(topPanel, " ", GuiUtils.font14b);
-        addJButton(topPanel, " Search ", "", GuiUtils.font14b, new MouseListener() {
+        addJButton(topPanel, " Search ", "", GuiUtils.font14b, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent e) {
                 int typeLen = searchTypes.length;
                 String text = "";
@@ -72,18 +74,10 @@ public class SystemInformation extends GuiJPanel {
                 textArea.append(text);
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 // clear文本域
                 textArea.setText("");
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
             }
         });
     }
@@ -233,9 +227,12 @@ public class SystemInformation extends GuiJPanel {
         int interval = 5;
         StringBuilder sb = new StringBuilder();
         SortedMap<String, Charset> map = GuiUtils.availableCharsets();
-        int i = 0; // 首字母小写对应ASCII的十进制值
-        int i_o = 0; // 上一个首字母小写对应ASCII的十进制值
-        int l = 0; // 同一字母开头的字符集数目过多, 则10个分一行
+        // 首字母小写对应ASCII的十进制值
+        int i = 0;
+        // 上一个首字母小写对应ASCII的十进制值
+        int i_o = 0;
+        // 同一字母开头的字符集数目过多, 则10个分一行
+        int l = 0;
         for (String key : map.keySet()) {
             i = (key.substring(0, 1).toLowerCase()).toCharArray()[0];
             if (i_o != 0 && i_o != i) {
@@ -268,7 +265,8 @@ public class SystemInformation extends GuiJPanel {
         for (Font font : fonts) {
             names.add(font.getFontName());
         }
-        Collections.sort(names); // 排序
+        // 排序
+        Collections.sort(names);
         int i = 0;
         for (String name : names) {
             sb.append(GuiUtils.getFillUpString(name, 42));

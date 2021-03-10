@@ -1,7 +1,8 @@
 package bs.tool.commongui.plugins.more;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import com.spreada.utils.chinese.ZHConverter;
 
 import javax.swing.*;
@@ -9,12 +10,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 /**
  * 中文简繁体转换.
  */
-public class ZHConverterVisual extends GuiJPanel {
+public class ZHConverterVisual extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -55,49 +55,38 @@ public class ZHConverterVisual extends GuiJPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(7, 1));
         actionPanel.add(buttonPanel, BorderLayout.SOUTH);
         // 简->繁
-        addJButton(buttonPanel, " 简 -> 繁 ", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonPanel, " 简 -> 繁 ", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String input = simplifiedTextArea.getText();
                 traditionalTextArea.append(ZHConverter.convert(input, ZHConverter.TRADITIONAL));
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 traditionalTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
-        buttonPanel.add(new JPanel()); // 仅做填充
+        // 仅做填充
+        buttonPanel.add(new JPanel());
         // 繁->简
-        addJButton(buttonPanel, " 繁 -> 简 ", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonPanel, " 繁 -> 简 ", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String input = traditionalTextArea.getText();
                 simplifiedTextArea.append(ZHConverter.convert(input, ZHConverter.SIMPLIFIED));
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 simplifiedTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
-        buttonPanel.add(new JPanel()); // 仅做填充
+        // 仅做填充
+        buttonPanel.add(new JPanel());
         // 全部清空
         addJButton(buttonPanel, " 全部清空 ", "", GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 simplifiedTextArea.setText("");
                 traditionalTextArea.setText("");

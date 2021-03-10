@@ -1,24 +1,24 @@
 package bs.tool.commongui.plugins.more;
 
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiImagePanel;
-import bs.tool.commongui.GuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import bs.tool.commongui.code.QrCodeUtil;
 import bs.tool.commongui.utils.FileUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
 /**
  * 二维码转换.
  */
-public class QrCodeConverter extends GuiJPanel {
+public class QrCodeConverter extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -71,7 +71,8 @@ public class QrCodeConverter extends GuiJPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(6, 1));
         actionPanel.add(buttonPanel, BorderLayout.SOUTH);
         // 生成
-        addJButton(buttonPanel, " 生成二维码 ", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonPanel, " 生成二维码 ", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String input = textArea.getText();
                 if (input.length() != 0) {
@@ -80,24 +81,17 @@ public class QrCodeConverter extends GuiJPanel {
                 }
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 currentQrCodeImageFile = blankImageFile;
                 qrCodeImagePanel.repaint(currentQrCodeImageFile);
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
             }
         });
 
         // 另存图片
         addJButton(buttonPanel, " 另存图片 ", "", GuiUtils.font14_cn,
                 new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent event) {
                         int option = imageChooser.showSaveDialog(null);
                         if (option == JFileChooser.APPROVE_OPTION) {
@@ -116,11 +110,13 @@ public class QrCodeConverter extends GuiJPanel {
                     }
                 });
 
-        buttonPanel.add(new JPanel()); // 仅做填充
+        // 仅做填充
+        buttonPanel.add(new JPanel());
 
         // 选择图片
         addJButton(buttonPanel, " 选择图片 ", "", GuiUtils.font14_cn,
                 new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent event) {
                         if (imageChooser.showDialog(getContextPanel(), "确定") != JFileChooser.CANCEL_OPTION) {
                             textArea.setText("");
@@ -135,22 +131,15 @@ public class QrCodeConverter extends GuiJPanel {
                 });
 
         // 解析
-        addJButton(buttonPanel, " 解析二维码 ", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonPanel, " 解析二维码 ", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 decodeQrCodeImage(currentQrCodeImageFile);
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 textArea.setText("");
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
             }
         });
     }

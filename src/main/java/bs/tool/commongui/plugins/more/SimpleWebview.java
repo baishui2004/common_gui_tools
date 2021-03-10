@@ -1,6 +1,6 @@
 package bs.tool.commongui.plugins.more;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
@@ -11,7 +11,7 @@ import java.awt.*;
 /**
  * Simple Webview.
  */
-public class SimpleWebview extends GuiJPanel {
+public class SimpleWebview extends AbstractGuiJPanel {
 
     public SimpleWebview() {
         setLayout(new BorderLayout());

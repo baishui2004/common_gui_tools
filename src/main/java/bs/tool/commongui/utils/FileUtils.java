@@ -22,47 +22,47 @@ public final class FileUtils {
     public final static String JAVA_IO_TMPDIR = System.getProperty("java.io.tmpdir");
 
     /**
-     * 相同大小文件查找时用的Map.
+     * 重复文件查找时用的Map（存储的是所有大小的文件，并非仅是同一个大小大于1的才存储）.
      * <p>
      * <pre>
      * key的格式："文件大小".
      * </pre>
      */
-    public static Map<String, List<File>> sameSizeFilesMap;
+    public static Map<String, List<File>> searchRepeatSizeFilesMap;
     /**
-     * 重复文件查找时用的Map.
+     * 重复文件查找时用的Map（存储的是同一个大小大于1的）.
      * <p>
      * <pre>
      * key的格式："文件大小:MD5".
      */
-    public static Map<String, List<File>> repeatFilesMap;
+    public static Map<String, List<File>> searchRepeatSameSizeFilesMap;
     /**
      * 重复文件查找时用的Set.
      * <p>
      * <pre>
      * 元素String的格式："文件大小:MD5".
-     * 判断repeatFilesMap的value List<File>.size()>1，则加入repeatFilesProp中.
+     * 判断repeatFilesMap的value List<File>.size()>1，则加入repeatFilesSet中.
      * </pre>
      */
-    public static Set<String> repeatFilesProp;
+    public static Set<String> repeatFilesSet;
 
     /**
-     * 同名文件查找时用的Map.
+     * 同名文件查找时用的Map（存储的是所有文件名的文件，并非仅是同一个文件名大于1的才存储）.
      * <p>
      * <pre>
      * key的格式："文件名".
      * </pre>
      */
-    public static Map<String, List<File>> sameNameFilesMap;
+    public static Map<String, List<File>> searchSameNameFilesMap;
     /**
      * 同名文件查找时用的Set.
      * <p>
      * <pre>
      * 元素String的格式："文件名".
-     * 判断sameNameFilesMap的value List<File>.size()>1，则加入sameNameFilesProp中.
+     * 判断sameNameFilesMap的value List<File>.size()>1，则加入sameNameFilesSet中.
      * </pre>
      */
-    public static Set<String> sameNameFilesProp;
+    public static Set<String> sameNameFilesSet;
 
     /**
      * 迭代获取文件夹目录下所有文件(夹).
@@ -77,22 +77,27 @@ public final class FileUtils {
         SearchFileAndFolderNamePathParams searchFileAndFolderNamePathParams = new SearchFileAndFolderNamePathParams(
                 paramsMap);
         if (file.isDirectory()) {
-            loopDirectory(file, fileList, searchFileAndFolderNamePathParams);
+            loopDirectory(file, fileList, searchFileAndFolderNamePathParams, 0);
         }
         // 重复文件查找 计算相同大小文件的MD5值
-        if (searchFileAndFolderNamePathParams.type_repeatSearch) {
-            for (String fileSize : sameSizeFilesMap.keySet()) {
-                for (File sameSizeFile : sameSizeFilesMap.get(fileSize)) {
+        if (searchFileAndFolderNamePathParams.typeRepeatSearch) {
+            for (String fileSize : searchRepeatSizeFilesMap.keySet()) {
+                List<File> sizeFiles = searchRepeatSizeFilesMap.get(fileSize);
+                // 小于2个的无需判断重复
+                if (sizeFiles.size() < 2) {
+                    continue;
+                }
+                for (File sameSizeFile : sizeFiles) {
                     try {
                         byte[] bytes = new byte[2048];
                         new FileInputStream(sameSizeFile).read(bytes);
                         String prop = fileSize + ":" + DigestUtils.md5Hex(bytes);
-                        List<File> repeatFiles = repeatFilesMap.get(prop);
+                        List<File> repeatFiles = searchRepeatSameSizeFilesMap.get(prop);
                         if (repeatFiles == null) {
                             repeatFiles = new ArrayList<File>();
-                            repeatFilesMap.put(prop, repeatFiles);
+                            searchRepeatSameSizeFilesMap.put(prop, repeatFiles);
                         } else if (repeatFiles.size() > 0) {
-                            repeatFilesProp.add(prop);
+                            repeatFilesSet.add(prop);
                         }
                         repeatFiles.add(sameSizeFile);
                     } catch (FileNotFoundException e) {
@@ -102,11 +107,13 @@ public final class FileUtils {
                     }
                 }
             }
-        } else if (searchFileAndFolderNamePathParams.type_sameNameSearch) { // 同名文件查找
-            for (String fileName : sameNameFilesMap.keySet()) {
-                List<File> sameFiles = sameNameFilesMap.get(fileName);
-                if (sameFiles.size() > 1) {
-                    sameNameFilesProp.add(fileName);
+        }
+        // 同名文件查找
+        else if (searchFileAndFolderNamePathParams.typeSameNameSearch) {
+            for (String fileName : searchSameNameFilesMap.keySet()) {
+                List<File> nameFiles = searchSameNameFilesMap.get(fileName);
+                if (nameFiles.size() > 1) {
+                    sameNameFilesSet.add(fileName);
                 }
             }
         }
@@ -140,16 +147,21 @@ public final class FileUtils {
      * @param directory 目录
      * @param fileList  file集合
      * @param sps       参数
+     * @param hierarchy 目录层级 与sps.folderHierarchy做对比进行目录层级遍历深度使用，传0不对遍历层级进行限制
      */
-    private static void loopDirectory(File directory, List<File> fileList, SearchFileAndFolderNamePathParams sps) {
+    private static void loopDirectory(File directory, List<File> fileList, SearchFileAndFolderNamePathParams sps, int hierarchy) {
         File[] files = directory.listFiles();
         if (files == null) {
             return;
         }
+        hierarchy += 1;
         for (File file : files) {
             ifAddFile(file, fileList, sps);
+            if (sps.folderHierarchy != 0 && hierarchy >= sps.folderHierarchy) {
+                continue;
+            }
             if (file.isDirectory()) {
-                loopDirectory(file, fileList, sps);
+                loopDirectory(file, fileList, sps, hierarchy);
             }
         }
     }
@@ -217,13 +229,15 @@ public final class FileUtils {
         boolean isDir = file.isDirectory();
 
         // 是否是查找空文件/文件夹
-        if (sps.type_blankSearch
-                && ((isDir && (file.listFiles() == null || file.listFiles().length != 0)) || (!isDir && file.length() != 0))) {
+        boolean blankDirOrFile = (isDir && (file.listFiles() == null || file.listFiles().length != 0)) || (!isDir && file.length() != 0);
+        if (sps.typeBlankSearch && blankDirOrFile) {
             return;
         }
-        boolean ifAdd = ifAddFileFolderHidden(hidden, isDir, sps); // 判断是否包括隐藏文件、非隐藏文件、文件、文件夹
+        // 判断是否包括隐藏文件、非隐藏文件、文件、文件夹
+        boolean ifAdd = ifAddFileFolderHidden(hidden, isDir, sps);
         if (ifAdd) {
-            ifAdd = ifInSideTime(file.lastModified(), sps.modifyTimeFrom, sps.modifyTimeTo); // 比较修改时间
+            // 比较修改时间
+            ifAdd = ifInSideTime(file.lastModified(), sps.modifyTimeFrom, sps.modifyTimeTo);
         }
         if (ifAdd) {
             // 文件(夹)路径包含(不包含)字符
@@ -232,48 +246,60 @@ public final class FileUtils {
         }
         if (ifAdd) {
             if (isDir) {
-                if (!sps.type_repeatSearch && !sps.type_sameNameSearch) {
+                if (!sps.typeRepeatSearch && !sps.typeSameNameSearch) {
                     // 文件夹路径包含(不包含)字符
                     ifAdd = ifMatchText(file.getAbsolutePath(), sps.folderPathCsText, sps.folderPathNCsText,
                             sps.folderPathSRegex, sps.folderPathCsPattern, sps.folderPathNCsPattern);
                 }
             } else {
                 long fileSize = file.length();
-                ifAdd = ifInSideSize(fileSize, sps.sizeFrom, sps.sizeTo); // 比较文件大小
+                // 比较文件大小
+                ifAdd = ifInSideSize(fileSize, sps.sizeFrom, sps.sizeTo);
                 if (ifAdd) {
                     String fileName = file.getName();
                     String fileType = getFileType(fileName);
-                    ifAdd = sps.fileType.length() == 0 || ("," + sps.fileType + ",").contains("," + fileType + ","); // 比较文件类型
+                    // 比较文件类型
+                    ifAdd = sps.fileType.length() == 0 || ("," + sps.fileType + ",").contains("," + fileType + ",");
                     if (ifAdd) {
-                        // 文件名包含(不包含)字符
+                        // 文件名包含(不包含)字符，比较名称/路径是否匹配
                         ifAdd = ifMatchText(fileName, sps.fileNameCsText, sps.fileNameNCsText, sps.fileNameSRegex,
-                                sps.fileNameCsPattern, sps.fileNameNCsPattern); // 比较名称/路径是否匹配
+                                sps.fileNameCsPattern, sps.fileNameNCsPattern);
                     }
                     if (ifAdd) {
-                        if (sps.type_repeatSearch) { // 重复文件查找 先找到大小相同的文件
+                        // 重复文件查找 先找到大小相同的文件
+                        if (sps.typeRepeatSearch && !isDir) {
                             String prop = Long.toString(fileSize);
-                            List<File> sameSizeFiles = sameSizeFilesMap.get(prop);
-                            if (sameSizeFiles == null) {
-                                sameSizeFiles = new ArrayList<File>();
-                                sameSizeFilesMap.put(prop, sameSizeFiles);
+                            if (sps.repeatSameSuffix) {
+                                prop = fileType + ":" + prop;
                             }
-                            sameSizeFiles.add(file);
-                        } else if (sps.type_sameNameSearch) { // 重复文件查找 先找到大小相同的文件
-                            String prop = fileName.substring(0, fileName.length() - fileType.length() - 1);
-                            List<File> sameNameFiles = sameNameFilesMap.get(prop);
-                            if (sameNameFiles == null) {
-                                sameNameFiles = new ArrayList<File>();
-                                sameNameFilesMap.put(prop, sameNameFiles);
+                            List<File> sizeFiles = searchRepeatSizeFilesMap.get(prop);
+                            if (sizeFiles == null) {
+                                sizeFiles = new ArrayList<File>();
+                                searchRepeatSizeFilesMap.put(prop, sizeFiles);
                             }
-                            sameNameFiles.add(file);
+                            sizeFiles.add(file);
+                        } else if (sps.typeSameNameSearch) {
+                            // 同名文件查找
+                            String prop = "";
+                            if (sps.repeatSameSuffix) {
+                                prop = fileName;
+                            } else {
+                                prop = fileName.substring(0, fileName.length() - fileType.length() - 1);
+                            }
+                            List<File> nameFiles = searchSameNameFilesMap.get(prop);
+                            if (nameFiles == null) {
+                                nameFiles = new ArrayList<File>();
+                                searchSameNameFilesMap.put(prop, nameFiles);
+                            }
+                            nameFiles.add(file);
                         }
                     }
                 }
             }
         }
-        // 当查找类型为'重复文件查找'，files最后长度为0，结果保存在FileUtils.repeatFilesProp及FileUtils.repeatFilesMap中
-        // 当查找类型为'同名文件查找'，files最后长度为0，结果保存在FileUtils.sameNameFilesProp及FileUtils.sameNameFilesMap中
-        if (ifAdd && !sps.type_repeatSearch && !sps.type_sameNameSearch) {
+        // 当查找类型为'重复文件查找'，files最后长度为0，结果保存在FileUtils.repeatFilesSet及FileUtils.repeatFilesMap中
+        // 当查找类型为'同名文件查找'，files最后长度为0，结果保存在FileUtils.sameNameFilesSet及FileUtils.sameNameFilesMap中
+        if (ifAdd && !sps.typeRepeatSearch && !sps.typeSameNameSearch) {
             fileList.add(file);
         }
     }

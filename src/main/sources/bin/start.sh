@@ -1,1 +1,1 @@
-java -Djava.ext.dirs="./lib" -jar "./lib/bs-tool-cgt-1.4.jar"
+java -Xms64m -Xmx256m -Dapple.awt.application.name="Common Gui Tools" -Dcom.apple.mrj.application.apple.menu.about.name="Common Gui Tools" -cp "./lib/*" bs.tool.commongui.GuiMain

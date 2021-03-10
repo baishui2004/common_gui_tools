@@ -7,14 +7,15 @@ import java.util.regex.Pattern;
 
 public class SearchFileAndFolderNamePathParams {
 
-    public Boolean type_repeatSearch;
-    public Boolean type_sameNameSearch;
-    public Boolean type_blankSearch;
+    public Boolean typeRepeatSearch;
+    public Boolean typeSameNameSearch;
+    public Boolean typeBlankSearch;
     public String fileType;
     public boolean containsFile;
     public boolean containsFolder;
     public boolean containsHidden;
     public boolean containsNotHidden;
+    public boolean repeatSameSuffix;
     public Double sizeFrom;
     public Double sizeTo;
     public Long modifyTimeFrom;
@@ -35,16 +36,19 @@ public class SearchFileAndFolderNamePathParams {
     public Pattern fileNameNCsPattern;
     public Pattern folderPathCsPattern;
     public Pattern folderPathNCsPattern;
+    // 0表示不限制
+    public int folderHierarchy;
 
     public SearchFileAndFolderNamePathParams(Map<String, Object> paramsMap) {
-        type_repeatSearch = Boolean.parseBoolean(GuiUtils.toString(paramsMap.get("type_repeatSearch")));
-        type_sameNameSearch = Boolean.parseBoolean(GuiUtils.toString(paramsMap.get("type_sameNameSearch")));
-        type_blankSearch = Boolean.parseBoolean(GuiUtils.toString(paramsMap.get("type_blankSearch")));
+        typeRepeatSearch = Boolean.parseBoolean(GuiUtils.toString(paramsMap.get("type_repeatSearch")));
+        typeSameNameSearch = Boolean.parseBoolean(GuiUtils.toString(paramsMap.get("type_sameNameSearch")));
+        typeBlankSearch = Boolean.parseBoolean(GuiUtils.toString(paramsMap.get("type_blankSearch")));
         fileType = GuiUtils.toString(paramsMap.get("searchFileType"));
         containsFile = GuiUtils.parseFalse(paramsMap.get("containsFile"));
         containsFolder = GuiUtils.parseFalse(paramsMap.get("containsFolder"));
         containsHidden = GuiUtils.parseFalse(paramsMap.get("containsHidden"));
         containsNotHidden = GuiUtils.parseFalse(paramsMap.get("containsNotHidden"));
+        repeatSameSuffix = GuiUtils.parseFalse(paramsMap.get("repeatSameSuffix"));
         sizeFrom = (Double) paramsMap.get("fileSizeFrom");
         sizeTo = (Double) paramsMap.get("fileSizeTo");
         modifyTimeFrom = (Long) paramsMap.get("modifyTimeFrom");
@@ -58,6 +62,11 @@ public class SearchFileAndFolderNamePathParams {
         folderPathCsText = GuiUtils.toString(paramsMap.get("folderPathContainsText"));
         folderPathNCsText = GuiUtils.toString(paramsMap.get("folderPathNotContainsText"));
         folderPathSRegex = Boolean.parseBoolean(GuiUtils.toString(paramsMap.get("folderPathSupportRegex")));
+        if (GuiUtils.toString(paramsMap.get("folderHierarchyText")).length() != 0) {
+            folderHierarchy = Integer.parseInt(GuiUtils.toString(paramsMap.get("folderHierarchyText")));
+        } else {
+            folderHierarchy = 0;
+        }
 
         if (filePathSRegex) {
             filePathCsPattern = Pattern.compile(filePathCsText, Pattern.CASE_INSENSITIVE);

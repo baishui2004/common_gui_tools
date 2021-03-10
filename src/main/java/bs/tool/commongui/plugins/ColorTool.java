@@ -1,6 +1,6 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 /**
  * 颜色工具.
  */
-public class ColorTool extends GuiJPanel {
+public class ColorTool extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -132,7 +132,7 @@ public class ColorTool extends GuiJPanel {
         String g = gTextField.getText().trim();
         String b = bTextField.getText().trim();
         try {
-            if (!r.equals("") && !g.equals("") && !b.equals("")) {
+            if (!"".equals(r) && !"".equals(g) && !"".equals(b)) {
                 color = new Color(Integer.parseInt(r), Integer.parseInt(g), Integer.parseInt(b));
             }
         } catch (Exception e) {
@@ -151,7 +151,7 @@ public class ColorTool extends GuiJPanel {
         String b = "";
         String html = htmlTextField.getText().trim();
         try {
-            if (!html.equals("")) {
+            if (!"".equals(html)) {
                 if (html.startsWith("#")) {
                     html = html.substring(1);
                 }

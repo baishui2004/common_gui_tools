@@ -96,6 +96,7 @@ public class ProjectPropertiesDeal implements ProjectPropertiesDealInterface {
     /**
      * 解析属性文件获得Project相关属性.
      */
+    @Override
     public void deal(String projectPath) throws IOException {
 
         setProjectPath(projectPath);
@@ -135,6 +136,7 @@ public class ProjectPropertiesDeal implements ProjectPropertiesDealInterface {
      */
     private JTextArea runLogTextArea;
 
+    @Override
     public void setRunLogTextArea(JTextArea runLogTextArea) {
         this.runLogTextArea = runLogTextArea;
     }
@@ -153,6 +155,7 @@ public class ProjectPropertiesDeal implements ProjectPropertiesDealInterface {
     /**
      * 是否是Eclipse 的Java Project、Dynamic Web Project或者MyEclipse的Web Project.
      */
+    @Override
     public boolean isJavaOrJavaWebEclipseProject(String projectPath) {
         if (!new File(projectPath + this.projectNameFile).exists()) {
             return false;
@@ -170,38 +173,47 @@ public class ProjectPropertiesDeal implements ProjectPropertiesDealInterface {
         return true;
     }
 
+    @Override
     public boolean isJavaWebProject() {
         return this.javaWebProject;
     }
 
+    @Override
     public String getProjectPath() {
         return this.projectPath;
     }
 
+    @Override
     public void setProjectPath(String projectPath) {
         this.projectPath = projectPath;
     }
 
+    @Override
     public String getProjectName() {
         return this.projectName;
     }
 
+    @Override
     public String getCompileSource() {
         return this.compileSource;
     }
 
+    @Override
     public String getCompileTarget() {
         return this.compileTarget;
     }
 
+    @Override
     public String[] getJavaSourcesPath() {
         return this.javaSourcesPath;
     }
 
+    @Override
     public String getOutputPath() {
         return this.outputPath;
     }
 
+    @Override
     public String getWebappPath() {
         return this.webappPath;
     }

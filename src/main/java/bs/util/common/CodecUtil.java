@@ -42,7 +42,7 @@ public final class CodecUtil {
     /**
      * encoding Big5.
      */
-    public static final String ENCODING_Big5 = "Big5";
+    public static final String ENCODING_BIG5 = "Big5";
     /**
      * encoding ISO-8859-1.
      */

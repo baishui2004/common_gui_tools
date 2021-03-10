@@ -1,21 +1,21 @@
 package bs.tool.commongui.plugins.more;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import bs.tool.commongui.utils.EscapeUtils;
 import bs.tool.commongui.utils.LanguageUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 /**
  * 字符转义工具.
  */
-public class EscapeCharacterTool extends GuiJPanel {
+public class EscapeCharacterTool extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -36,7 +36,7 @@ public class EscapeCharacterTool extends GuiJPanel {
      * 字符类型.
      */
     private String[] characterTypes = new String[]{LanguageUtils.CONST_HTML, LanguageUtils.CONST_XML,
-            LanguageUtils.CONST_JAVA, LanguageUtils.CONST_JavaScript, LanguageUtils.CONST_CSV};
+            LanguageUtils.CONST_JAVA, LanguageUtils.CONST_JAVASCRIPT, LanguageUtils.CONST_CSV};
     /**
      * 字符类型.
      */
@@ -65,7 +65,7 @@ public class EscapeCharacterTool extends GuiJPanel {
     /**
      * JavaScript转义说明.
      */
-    private static final String ESCAPE_HELP_JavaScript = "JavaScript     See: http://www.w3schools.com/js/js_strings.asp"
+    private static final String ESCAPE_HELP_JAVA_SCRIPT = "JavaScript     See: http://www.w3schools.com/js/js_strings.asp"
             + "\n"
             + "\n回车符     换行符     制表符     单引号     双引号     反斜杠     退格符     换页符"
             + "\n    \\r             \\n             \\t              \\'             \\\"              \\\\             \\b             \\f";
@@ -110,7 +110,7 @@ public class EscapeCharacterTool extends GuiJPanel {
             @Override
             public void actionPerformed(ActionEvent event) {
                 showTextAreaMessage("常用转义字符" + "\n\n" + ESCAPE_HELP_HTML + "\n\n\n" + ESCAPE_HELP_XML + "\n\n\n"
-                                + ESCAPE_HELP_JAVA + "\n\n\n" + ESCAPE_HELP_JavaScript + "\n\n\n" + ESCAPE_HELP_CSV, "帮助",
+                                + ESCAPE_HELP_JAVA + "\n\n\n" + ESCAPE_HELP_JAVA_SCRIPT + "\n\n\n" + ESCAPE_HELP_CSV, "帮助",
                         JOptionPane.INFORMATION_MESSAGE, null, null);
             }
         });
@@ -123,56 +123,47 @@ public class EscapeCharacterTool extends GuiJPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(9, 1));
         actionPanel.add(buttonPanel, BorderLayout.SOUTH);
         addJComboBox(buttonPanel, characterTypes, GuiUtils.font13, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 curCharacterType = ((JComboBox) event.getSource()).getSelectedItem().toString();
                 setHelpTextArea();
             }
         });
-        buttonPanel.add(new JPanel()); // 仅做填充
+        // 仅做填充
+        buttonPanel.add(new JPanel());
         // 转换
-        addJButton(buttonPanel, " 转换 ", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonPanel, " 转换 ", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String input = unescapeTextArea.getText();
                 escapeTextArea.append(EscapeUtils.escape(input, curCharacterType));
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 escapeTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
-        buttonPanel.add(new JPanel()); // 仅做填充
+        // 仅做填充
+        buttonPanel.add(new JPanel());
         // 还原
-        addJButton(buttonPanel, " 还原 ", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonPanel, " 还原 ", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String input = escapeTextArea.getText();
                 unescapeTextArea.append(EscapeUtils.unescape(input, curCharacterType));
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 unescapeTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
-        buttonPanel.add(new JPanel()); // 仅做填充
+        // 仅做填充
+        buttonPanel.add(new JPanel());
         // 全部清空
         addJButton(buttonPanel, " 全部清空 ", "", GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 unescapeTextArea.setText("");
                 escapeTextArea.setText("");
@@ -190,8 +181,8 @@ public class EscapeCharacterTool extends GuiJPanel {
             helpTextArea.setText(ESCAPE_HELP_XML);
         } else if (curCharacterType.equals(LanguageUtils.CONST_JAVA)) {
             helpTextArea.setText(ESCAPE_HELP_JAVA);
-        } else if (curCharacterType.equals(LanguageUtils.CONST_JavaScript)) {
-            helpTextArea.setText(ESCAPE_HELP_JavaScript);
+        } else if (curCharacterType.equals(LanguageUtils.CONST_JAVASCRIPT)) {
+            helpTextArea.setText(ESCAPE_HELP_JAVA_SCRIPT);
         } else if (curCharacterType.equals(LanguageUtils.CONST_CSV)) {
             helpTextArea.setText(ESCAPE_HELP_CSV);
         }

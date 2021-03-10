@@ -1,7 +1,8 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import bs.tool.commongui.utils.TimeUtils;
 
 import javax.swing.*;
@@ -10,21 +11,20 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * 时间工具.
  */
-public class TimeTool extends GuiJPanel {
+public class TimeTool extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * 时间格式.
      */
-    private String[] timeFormatter = new String[]{TimeUtils.Formatter, TimeUtils.Formatter_Millisecond, TimeUtils.Formatter_zh, TimeUtils.Formatter_year, TimeUtils.Formatter_zh_year};
+    private String[] timeFormatter = new String[]{TimeUtils.FORMATTER, TimeUtils.FORMATTER_MILLISECOND, TimeUtils.FORMATTER_ZH, TimeUtils.FORMATTER_YEAR, TimeUtils.FORMATTER_ZH_YEAR};
 
     /**
      * 当前时间格式.
@@ -68,6 +68,7 @@ public class TimeTool extends GuiJPanel {
         JPanel convertFlowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         // 时间格式
         addJComboBox(convertFlowPanel, timeFormatter, GuiUtils.font13_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 curTimeFormatter = ((JComboBox) event.getSource()).getSelectedItem().toString();
             }
@@ -92,7 +93,8 @@ public class TimeTool extends GuiJPanel {
         });
         // 转换按钮
         convertButton = createJButton("转换", "", GuiUtils.font14b_cn);
-        convertButton.addMouseListener(new MouseListener() {
+        convertButton.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String timeStr = timeStrTextField.getText().trim();
                 if (timeStr.length() == 0) {
@@ -109,17 +111,9 @@ public class TimeTool extends GuiJPanel {
                 convertButton.setEnabled(true);
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 timestampTextField.setText("");
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
             }
         });
         convertFlowPanel.add(convertButton);
@@ -143,7 +137,8 @@ public class TimeTool extends GuiJPanel {
         });
 
         revertButton = createJButton("还原", "", GuiUtils.font14b_cn);
-        revertButton.addMouseListener(new MouseListener() {
+        revertButton.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String timestamp = timestampTextField.getText().trim();
                 if (timestamp.length() == 0) {
@@ -160,17 +155,9 @@ public class TimeTool extends GuiJPanel {
                 revertButton.setEnabled(true);
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 timeStrTextField.setText("");
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
             }
         });
         revertFlowPanel.add(revertButton);

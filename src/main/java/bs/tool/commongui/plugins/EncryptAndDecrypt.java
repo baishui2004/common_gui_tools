@@ -1,7 +1,8 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import bs.util.common.CodecUtil;
 import org.apache.commons.codec.DecoderException;
 
@@ -13,7 +14,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * 加密解密.
  */
-public class EncryptAndDecrypt extends GuiJPanel {
+public class EncryptAndDecrypt extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -79,13 +80,15 @@ public class EncryptAndDecrypt extends GuiJPanel {
         JPanel charsetsPanel = new JPanel(new FlowLayout());
         addJLabel(charsetsPanel, "字符集:", GuiUtils.font14b_cn);
         addJComboBox(charsetsPanel, charsets, GuiUtils.font13, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 curCharset = ((JComboBox) event.getSource()).getSelectedItem().toString();
             }
         });
         actionGridPanel.add(charsetsPanel);
 
-        addJLabel(actionGridPanel, " ", GuiUtils.font13); // 仅作填充
+        // 仅作填充
+        addJLabel(actionGridPanel, " ", GuiUtils.font13);
         // 算法单选框
         ButtonGroup buttonGroup = new ButtonGroup();
         int cryptosLen = cryptos.length;
@@ -99,6 +102,7 @@ public class EncryptAndDecrypt extends GuiJPanel {
                 JRadioButton firstRadio = new JRadioButton(GuiUtils.getFillUpString(crypto, 6));
                 firstRadio.setFont(GuiUtils.font13_cn);
                 firstRadio.addItemListener(new ItemListener() {
+                    @Override
                     public void itemStateChanged(ItemEvent event) {
                         JRadioButton radio = (JRadioButton) event.getSource();
                         if (radio.isSelected()) {
@@ -118,6 +122,7 @@ public class EncryptAndDecrypt extends GuiJPanel {
                     JRadioButton secondRadio = new JRadioButton(crypto);
                     secondRadio.setFont(GuiUtils.font13_cn);
                     secondRadio.addItemListener(new ItemListener() {
+                        @Override
                         public void itemStateChanged(ItemEvent event) {
                             JRadioButton radio = (JRadioButton) event.getSource();
                             if (radio.isSelected()) {
@@ -142,7 +147,8 @@ public class EncryptAndDecrypt extends GuiJPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
         actionPanel.add(buttonPanel, BorderLayout.SOUTH);
         // 加密按钮
-        addJButton(buttonPanel, "加密", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonPanel, "加密", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String input = encrptyTextArea.getText();
                 try {
@@ -173,21 +179,14 @@ public class EncryptAndDecrypt extends GuiJPanel {
                 }
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 decrptyTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
         // 解密按钮
-        addJButton(buttonPanel, "解密", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonPanel, "解密", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String input = decrptyTextArea.getText();
                 try {
@@ -211,17 +210,9 @@ public class EncryptAndDecrypt extends GuiJPanel {
                 }
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 encrptyTextArea.setText("");
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
             }
         });
     }

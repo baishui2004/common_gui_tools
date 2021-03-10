@@ -1,54 +1,46 @@
 1，文件(夹)查找操作：Folder And File Operate
-
-        优化方案：2013-9-25，取出有相同大小的所有文件，比较文件大小以及前2048Byte的内容的MD5值是否一样，如果两者相同，则认为重复，否则认为不重复，有较小的误差率。
-                      
-        原方案： 2013-3-9，没使用Md5值，考虑是速度会比较慢。用比较文件后缀名及文件大小，如果两者相同，则认为重复，否则认为不重复，有一定的误差率。
+   优化方案：2013-9-25，取出有相同大小的所有文件，比较文件大小以及前2048Byte的内容的MD5值是否一样，如果两者相同，则认为重复，否则认为不重复，有较小的误差率。
+   旧版方案：2013-3-9，没使用Md5值，考虑是速度会比较慢。用比较文件后缀名及文件大小，如果两者相同，则认为重复，否则认为不重复，有一定的误差率。
            Map<"type:后缀名,size:文件大小", List<File>>，判断List<File>.size()>1，则加入List<"type:后缀名,size:文件大小">中。
-
-
-2，More Tools中的插件，需要依赖第三方类包，插件加载配置在配置文件conf/more_tools.properties中，如不需使用某个插件，则可依照如下操作进行精简：
-   (1)，注释或删掉配置文件conf/more_tools.properties中的插件加载配置；
-   (2)，对照lib/readme删掉上一步插件的对应类包。
-
-
+2，bs.tool.commongui.plugins.more中的插件，需要依赖第三方类包，插件加载配置在配置文件conf/tools.properties中，如不需使用某个插件，则可依照如下操作进行精简：
+   (1)，注释或删掉配置文件conf/tools.properties中的插件加载配置；
+   (2)，对照以下的Java依赖包说明删掉上一步插件的对应类包。
 
 
 
 Java依赖包说明：
-
 1, commons-codec-*.jar             类bs.util.common.CodecUtil.java
-                                                                                             插件Character Converter类bs.util.tool.commongui.plugins.CharacterConverter.java
-                                                                                             插件Encrypt And Decrypt类bs.util.tool.commongui.plugins.EncryptAndDecrypt.java
+                                   插件Character Converter类bs.util.tool.commongui.plugins.CharacterConverter.java
+                                   插件Encrypt And Decrypt类bs.util.tool.commongui.plugins.EncryptAndDecrypt.java
+2, commons-io-*.jar                多个插件使用此类包中类
+                                   类包来源：http://commons.apache.org/proper/commons-io/index.html
+3, commons-lang-*.jar              类bs.tool.commongui.utils.EscapeUtils.java
+                                   插件Escape Character Tool类bs.util.tool.commongui.plugins.more.EscapeCharacterTool.java
+                                   类包来源：http://commons.apache.org/proper/commons-lang/index.html
+4, jnotify-0.94_improve-1.0.jar    插件JNotify Visual类bs.util.tool.commongui.plugins.more.JNotifyVisual.java
+                                   类包来源：http://code.google.com/p/improve-lgpl-jars/
+5, juniversalchardet-1.0.3.jar     插件JUniversal Chardet类bs.util.tool.commongui.plugins.more.JUniversalChardet.java
+                                   类包来源：https://code.google.com/p/juniversalchardet/
+                                           https://github.com/thkoch2001/juniversalchardet
+                                   Mozilla Project: https://www-archive.mozilla.org/projects/intl/chardet.html
+6, ZHConverter.jar                 插件ZHConverter Visual类bs.util.tool.commongui.plugins.more.ZHConverterVisual.java
+                                   类包来源：https://code.google.com/p/java-zhconverter/
+7, zxing-*.jar                     插件QrCode Converter类bs.tool.commongui.plugins.more.QrCodeConverter.java
+                                   包含：javase-*.jar, core-2.2.jar
+8, gson-*.jar                      插件Code Formatter类bs.tool.commongui.plugins.more.CodeFormatter.java
+9, passay-*.jar                    插件Password Generator类bs.tool.commongui.plugins.more.PasswordGenerator.java
+10, jxl-*.jar                      插件Interest Calculator类bs.tool.commongui.plugins.InterestCalculator.java导出Excel使用
+11, slf4j-api-*.jar, slf4j-simple-*.jar   slf4j日志依赖类包
 
-2, jodconverter/*.jar              插件JODConverter Visual类bs.util.tool.commongui.plugins.more.JODConverterVisual.java
-                                                                                             类包来源：http://www.artofsolving.com/opensource/jodconverter/
-                                                                                                     https://sourceforge.net/projects/jodconverter/files/JODConverter/
-                                                                                                     http://mvnrepository.com/artifact/com.artofsolving/jodconverter/
-                                                                                                     New: https://github.com/mirkonasato/jodconverter/
-
-3, jnotify-0.94_improve-1.0.jar    插件JNotify Visual类bs.util.tool.commongui.plugins.more.JNotifyVisual.java
-                                                                                             类包来源：http://code.google.com/p/improve-lgpl-jars/
-
-4, juniversalchardet-1.0.3.jar     插件JUniversal Chardet类bs.util.tool.commongui.plugins.more.JUniversalChardet.java
-                                                                                             类包来源：https://code.google.com/p/juniversalchardet/
-                                                                                                     https://github.com/thkoch2001/juniversalchardet
-                                                                                             Mozilla Project: https://www-archive.mozilla.org/projects/intl/chardet.html
-
-5, ZHConverter.jar                 插件ZHConverter Visual类bs.util.tool.commongui.plugins.more.ZHConverterVisual.java
-                                                                                             类包来源：https://code.google.com/p/java-zhconverter/
-
-6, commons-lang-*.jar              类bs.tool.commongui.utils.EscapeUtils.java
-                                                                                             插件Escape Character Tool类bs.util.tool.commongui.plugins.more.EscapeCharacterTool.java
-                                                                                             类包来源：http://commons.apache.org/proper/commons-lang/index.html
-
-7, commons-io-*.jar                                                                          多个插件使用此类包中类
-                                                                                             类包来源：http://commons.apache.org/proper/commons-io/index.html
-
-9, zxing-*.jar                     插件QrCode Converter类bs.tool.commongui.plugins.more.QrCodeConverter.java
-
-9, gson-*.jar                      插件Code Formatter类bs.tool.commongui.plugins.more.CodeFormatter.java
-
-10, DJNativeSwing, swt.win32.x86_64 插件Simple Webview类bs.util.tool.commongui.plugins.more.SimpleWebview.java
-                                                                                             类包来源：https://sourceforge.net/projects/djproject/files/DJ Native Swing/
-                                                                                                     https://mvnrepository.com/artifact/org.eclipse.swt/org.eclipse.swt.win32.win32.x86_64/4.3
-                                                                                                     other platform: https://mvnrepository.com/artifact/org.eclipse.swt   Standard Widget Toolkit
+@Deprecated
+1, jodconverter/*.jar              插件JODConverter Visual类bs.util.tool.commongui.plugins.more.JODConverterVisual.java
+                                   包括：jodconverter-*.jar, juh-*.jar, jurt-*.jar, ridl-*.jar, unoil-*.jar
+                                   类包来源：http://www.artofsolving.com/opensource/jodconverter/
+                                           https://sourceforge.net/projects/jodconverter/files/JODConverter/
+                                           http://mvnrepository.com/artifact/com.artofsolving/jodconverter/
+                                           New: https://github.com/mirkonasato/jodconverter/
+2, DJNativeSwing, swt.win32.x86_64 插件Simple Webview类bs.util.tool.commongui.plugins.more.SimpleWebview.java
+                                   包括：DJNativeSwing-*.jar, DJNativeSwing-SWT-*.jar, org.eclipse.swt.win32.win32.x86_64-*.jar
+                                   类包来源：https://sourceforge.net/projects/djproject/files/DJ Native Swing/
+                                           https://mvnrepository.com/artifact/org.eclipse.swt/org.eclipse.swt.win32.win32.x86_64/4.3
+                                           other platform: https://mvnrepository.com/artifact/org.eclipse.swt   Standard Widget Toolkit

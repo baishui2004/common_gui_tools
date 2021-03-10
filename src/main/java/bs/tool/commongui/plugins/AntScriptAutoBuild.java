@@ -1,7 +1,8 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import bs.tool.eclipse.ProjectPropertiesDeal;
 import bs.tool.eclipse.ProjectPropertiesDealInterface;
 import bs.util.io.PropertiesUtils;
@@ -11,7 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -20,7 +20,7 @@ import java.util.Properties;
 /**
  * Auto Build Ant构建脚本.
  */
-public class AntScriptAutoBuild extends GuiJPanel {
+public class AntScriptAutoBuild extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -67,12 +67,14 @@ public class AntScriptAutoBuild extends GuiJPanel {
         addJButton(buttonFlowPanel, "浏览", "", GuiUtils.font12_cn,
                 buttonBrowseListener(projectPathChooser, projectPathTextField));
         addJCheckBox(buttonFlowPanel, "备份已存在脚本", true, GuiUtils.font12_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 isBak = ((JCheckBox) event.getSource()).isSelected();
             }
         });
         // 按钮
-        addJButton(buttonFlowPanel, "Build", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonFlowPanel, "Build", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String projectPath = projectPathTextField.getText().trim();
                 if (!new File(projectPath).exists()) {
@@ -99,23 +101,13 @@ public class AntScriptAutoBuild extends GuiJPanel {
                 }
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 runLogTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            public void mouseClicked(MouseEvent e) {
-
-            }
         });
-        // Project路径选择控件
-        projectPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 仅可选择文件夹
+        // Project路径选择控件，仅可选择文件夹
+        projectPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooPanel.add(buttonFlowPanel, BorderLayout.EAST);
         inputPanel.add(fileChooPanel, BorderLayout.NORTH);
 
@@ -162,7 +154,7 @@ public class AntScriptAutoBuild extends GuiJPanel {
             if (i < tasks.length + i / (gridCol - 1) && !(i % (gridCol - 1) == 0 && i != 0)) {
                 title = tasks[i - i / (gridCol - 1)];
             }
-            if (title.equals("")) {
+            if ("".equals(title)) {
                 addJLabel(taskGridPanel, title, GuiUtils.font14_cn);
             } else {
                 boolean isSelected = false;
@@ -170,6 +162,7 @@ public class AntScriptAutoBuild extends GuiJPanel {
                     isSelected = true;
                 }
                 JCheckBox taskBox = createJCheckBox(title, isSelected, GuiUtils.font16, new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent event) {
                         JCheckBox checkBox = (JCheckBox) event.getSource();
                         setTaskNames(checkBox.getText(), checkBox.isSelected());

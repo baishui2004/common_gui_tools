@@ -1,8 +1,9 @@
 package bs.tool.commongui.plugins.more;
 
 import bs.org.suite.tool.JNotifyUtils;
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import net.contentobjects.jnotify.JNotifyException;
 
 import javax.swing.*;
@@ -10,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 文件(夹)变化监控，适合Windows、Linux、Mac系统.
  */
-public class JNotifyVisual extends GuiJPanel {
+public class JNotifyVisual extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -121,7 +121,8 @@ public class JNotifyVisual extends GuiJPanel {
                 buttonBrowseListener(monitorPathChooser, monitorPathTextField));
         // 监控按钮
         monitorButton = createJButton("监控", "", GuiUtils.font14b_cn);
-        monitorButton.addMouseListener(new MouseListener() {
+        monitorButton.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String path = monitorPathTextField.getText().trim();
                 if (!new File(path).exists()) {
@@ -159,26 +160,19 @@ public class JNotifyVisual extends GuiJPanel {
                 }
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 logTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
         buttonFlowPanel.add(monitorButton);
-        // 监控路径选择控件
-        monitorPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 仅可选择文件夹
+        // 监控路径选择控件，仅可选择文件夹
+        monitorPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         // 停止监控按钮
         stopMonitorButton = createJButton("停止监控", "", GuiUtils.font14b_cn);
         stopMonitorButton.setEnabled(false);
         stopMonitorButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 try {
                     notify.stopMonitor(watchId);
@@ -201,6 +195,7 @@ public class JNotifyVisual extends GuiJPanel {
         addJLabel(logFlowPanel, "", GuiUtils.font14_cn);
         // 是否记录监控日志，默认否
         addJCheckBox(logFlowPanel, "保存监控日志", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 if (((JCheckBox) event.getSource()).isSelected()) {
                     saveLog = true;
@@ -219,26 +214,15 @@ public class JNotifyVisual extends GuiJPanel {
         logPathPanel.add(new JPanel(), BorderLayout.NORTH);
         monitorLogFilePathTextField.setEnabled(false);
         monitorLogFilePathTextField.setEditable(false);
-        monitorLogFilePathTextField.addMouseListener(new MouseListener() {
-            public void mouseReleased(MouseEvent e) {
-            }
-
+        monitorLogFilePathTextField.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mousePressed(MouseEvent e) {
                 fileChooserBrowse(monitorLogFileChooser, monitorLogFilePathTextField);
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
         addJTextField(logPathPanel, monitorLogFilePathTextField, GuiUtils.font14_un, BorderLayout.CENTER);
-        // 监控路径选择控件
-        monitorLogFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY); // 仅可选择文件
+        // 监控路径选择控件，仅可选择文件
+        monitorLogFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         logPathPanel.add(new JPanel(), BorderLayout.SOUTH);
         logChooPanel.add(logPathPanel, BorderLayout.CENTER);
 
@@ -246,6 +230,7 @@ public class JNotifyVisual extends GuiJPanel {
         logButtonPanel.add(new JPanel(), BorderLayout.NORTH);
         // 展开/收缩高级(条件)按钮
         addJButton(logButtonPanel, "高级", "", GuiUtils.font12_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 advanceConditionPanel.setVisible(!advanceConditionPanel.isVisible());
                 getContextPanel().revalidate();
@@ -274,6 +259,7 @@ public class JNotifyVisual extends GuiJPanel {
         addJTextField(fileNameContainsPanel, fileNameNotContainsTextField, GuiUtils.font14_un);
         // 是否支持正则
         addJCheckBox(fileNameContainsPanel, "支持正则", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 fileNameSupportRegex = ((JCheckBox) event.getSource()).isSelected();
             }
@@ -290,6 +276,7 @@ public class JNotifyVisual extends GuiJPanel {
         addJTextField(folderPathContainsPanel, folderPathNotContainsTextField, GuiUtils.font14_un);
         // 是否支持正则
         addJCheckBox(folderPathContainsPanel, "支持正则", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 folderPathSupportRegex = ((JCheckBox) event.getSource()).isSelected();
             }

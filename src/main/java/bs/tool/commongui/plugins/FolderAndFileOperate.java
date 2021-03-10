@@ -1,8 +1,9 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import bs.tool.commongui.utils.FileUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import bs.util.io.PropertiesUtils;
 
 import javax.swing.*;
@@ -10,16 +11,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.*;
 
 /**
  * 文件(夹)操作.
  */
-public class FolderAndFileOperate extends GuiJPanel {
+public class FolderAndFileOperate extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,49 +32,76 @@ public class FolderAndFileOperate extends GuiJPanel {
     /**
      * 目录选择.
      */
-    private JFileChooser search_fileChooser = new JFileChooser();
+    private JFileChooser searchFileChooser = new JFileChooser();
 
     /**
      * 查找类型-文件(夹)查找.
      */
-    private final String type_search = "文件(夹)查找";
+    private final String typeSearch = "文件(夹)查找";
     /**
      * 查找类型-重复文件查找.
      */
-    private final String type_repeatSearch = "重复文件查找";
+    private final String typeRepeatSearch = "重复文件查找";
     /**
      * 查找类型-同名文件查找.
      */
-    private final String type_sameNameSearch = "同名文件查找";
+    private final String typeSameNameSearch = "同名文件查找";
     /**
      * 查找类型-空文件(夹)查找.
      */
-    private final String type_blankSearch = "空文件(夹)查找";
+    private final String typeBlankSearch = "空文件(夹)查找";
     /**
      * 查找类型.
      */
-    private final String[] types = new String[]{type_search, type_repeatSearch, type_sameNameSearch, type_blankSearch};
+    private final String[] types = new String[]{typeSearch, typeRepeatSearch, typeSameNameSearch, typeBlankSearch};
     /**
      * 当前查找类型.
      */
     private String curType = types[0];
 
     /**
-     * 操作类型-默认查找.
+     * 文件类型表单.
      */
-    private final String action_onlySearch = "默认查找";
+    private JTextField searchFileTypeTextField = new JTextField(39);
     /**
-     * 操作类型-复制文件.
+     * 是否相同文件类型，默认为false，用于重复及同名文件查找.
      */
-    private final String action_copyFile = "复制文件";
+    private boolean repeatSameSuffix = false;
     /**
-     * 操作类型-剪切文件.
+     * 是否相同文件类型.
      */
-    private final String action_cutFile = "剪切文件";
+    private JCheckBox repeatSameSuffixCheckBox = createJCheckBox("相同文件类型", false, GuiUtils.font14_cn, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            JCheckBox checkBox = (JCheckBox) event.getSource();
+            repeatSameSuffix = checkBox.isSelected();
+        }
+    });
+
     /**
-     * 操作类型-删除文件.
+     * 操作类型-查找.
      */
-    private final String action_deleteFile = "删除文件";
+    private final String action_onlySearch = "查找";
+    /**
+     * 操作类型-复制.
+     */
+    private final String action_copyFile = "复制";
+    /**
+     * 操作类型-剪切.
+     */
+    private final String action_cutFile = "剪切";
+    /**
+     * 操作类型-重命名.
+     */
+    private final String action_renameFile = "重命名";
+    /**
+     * 操作类型-删除.
+     */
+    private final String action_deleteFile = "删除";
+    /**
+     * 操作类型-删除重复.
+     */
+    private final String action_deleteRepeatFile = "删除重复";
     /**
      * 操作类型-删除空文件夹.
      */
@@ -81,7 +110,7 @@ public class FolderAndFileOperate extends GuiJPanel {
      * 操作类型.
      */
     private final String[] actions = new String[]{action_onlySearch, action_copyFile, action_cutFile,
-            action_deleteFile, action_deleteBlankFolder};
+            action_renameFile, action_deleteFile, action_deleteRepeatFile, action_deleteBlankFolder};
     /**
      * 当前操作类型.
      */
@@ -93,11 +122,11 @@ public class FolderAndFileOperate extends GuiJPanel {
     /**
      * 操作(复制、剪切文件存放位置)目录选择.
      */
-    private JFileChooser action_fileChooser = new JFileChooser();
+    private JFileChooser actionFileChooser = new JFileChooser();
     /**
      * 操作(复制、剪切文件存放位置)目录浏览按钮.
      */
-    private JButton action_chooseButton = createJButton("浏览", "", GuiUtils.font12_cn);
+    private JButton actionChooseButton = createJButton("浏览", "", GuiUtils.font12_cn);
 
     /**
      * 常见文件类型.
@@ -107,10 +136,6 @@ public class FolderAndFileOperate extends GuiJPanel {
      * 常见文件类型名称.
      */
     private String[] fileTypeNames;
-    /**
-     * 当前类型.
-     */
-    private String curFileType = "";
 
     /**
      * 是否包括文件，默认为true.
@@ -175,6 +200,10 @@ public class FolderAndFileOperate extends GuiJPanel {
      * 修改时间，结束表单.
      */
     private JFormattedTextField modifyTimeToTextField = createDateTextField();
+    /**
+     * 遍历目录层级，默认所有层级.
+     */
+    private JTextField folderHierarchyField = new JTextField(5);
 
     /**
      * 文件(夹)路径包含字符表单.
@@ -234,7 +263,8 @@ public class FolderAndFileOperate extends GuiJPanel {
             for (String key : propsMap.keySet()) {
                 propsSortAndNames.add(key);
             }
-            Collections.sort(propsSortAndNames); // 排序
+            // 排序
+            Collections.sort(propsSortAndNames);
 
             int expSize = propsSortAndNames.size() + 1;
             fileTypeNames = new String[expSize];
@@ -272,10 +302,11 @@ public class FolderAndFileOperate extends GuiJPanel {
         fileChooPanel.add(pathPanel, BorderLayout.CENTER);
         JPanel buttonFlowPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         addJButton(buttonFlowPanel, "浏览", "", GuiUtils.font12_cn,
-                buttonBrowseListener(search_fileChooser, pathTextField));
+                buttonBrowseListener(searchFileChooser, pathTextField));
 
         // Search按钮
-        addJButton(buttonFlowPanel, "查找", "", GuiUtils.font14b_cn, new MouseListener() {
+        addJButton(buttonFlowPanel, "查找", "", GuiUtils.font14b_cn, new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String path = pathTextField.getText().trim();
                 if (!new File(path).exists()) {
@@ -289,33 +320,39 @@ public class FolderAndFileOperate extends GuiJPanel {
                         return;
                     }
                 }
+                if (curAction.equals(action_renameFile) && !curType.equals(typeSearch)) {
+                    showMessage(typeSearch + "才可以进行重命名操作！", "警告", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
                 Map<String, Object> paramsMap = new HashMap<String, Object>();
-                if (curType.equals(type_repeatSearch)) {
+                if (curType.equals(typeRepeatSearch)) {
                     paramsMap.put("type_repeatSearch", true);
-                    FileUtils.sameSizeFilesMap = new HashMap<String, List<File>>();
-                    FileUtils.repeatFilesMap = new HashMap<String, List<File>>();
-                    FileUtils.repeatFilesProp = new LinkedHashSet<String>();
-                } else if (curType.equals(type_sameNameSearch)) {
+                    FileUtils.searchRepeatSizeFilesMap = new HashMap<String, List<File>>(5120);
+                    FileUtils.searchRepeatSameSizeFilesMap = new HashMap<String, List<File>>(512);
+                    FileUtils.repeatFilesSet = new LinkedHashSet<String>(512);
+                } else if (curType.equals(typeSameNameSearch)) {
                     paramsMap.put("type_sameNameSearch", true);
-                    FileUtils.sameNameFilesMap = new HashMap<String, List<File>>();
-                    FileUtils.sameNameFilesProp = new LinkedHashSet<String>();
-                } else if (curType.equals(type_blankSearch)) {
+                    FileUtils.searchSameNameFilesMap = new HashMap<String, List<File>>(5120);
+                    FileUtils.sameNameFilesSet = new LinkedHashSet<String>(512);
+                } else if (curType.equals(typeBlankSearch)) {
                     paramsMap.put("type_blankSearch", true);
                 }
-                Long curTime = new Date().getTime();
+                Long curTime = System.currentTimeMillis();
+                String curFileType = searchFileTypeTextField.getText();
                 paramsMap.put("searchFileType", curFileType);
                 paramsMap.put("containsFile", containsFile);
                 paramsMap.put("containsFolder", containsFolder);
                 paramsMap.put("containsHidden", containsHidden);
                 paramsMap.put("containsNotHidden", containsNotHidden);
+                paramsMap.put("repeatSameSuffix", repeatSameSuffix);
                 paramsMap.put("fileSizeFrom", GuiUtils.getCountFileSizeUnit(fileSizeFromTextField.getText().trim(),
                         fileSizeUnitFromBox.getSelectedItem().toString()));
                 paramsMap.put("fileSizeTo", GuiUtils.getCountFileSizeUnit(fileSizeToTextField.getText().trim(),
                         fileSizeUnitToBox.getSelectedItem().toString()));
                 paramsMap.put("modifyTimeFrom",
-                        getLongFormatTime(modifyTimeFromTextField.getText().trim(), format_yyyyMMddHHmmss));
+                        getLongFormatTime(modifyTimeFromTextField.getText().trim(), new SimpleDateFormat(FORMATTER_YYYYMMDDHHMMSS)));
                 paramsMap.put("modifyTimeTo",
-                        getLongFormatTime(modifyTimeToTextField.getText().trim(), format_yyyyMMddHHmmss));
+                        getLongFormatTime(modifyTimeToTextField.getText().trim(), new SimpleDateFormat(FORMATTER_YYYYMMDDHHMMSS)));
                 paramsMap.put("filePathContainsText", filePathContainsTextField.getText().trim());
                 paramsMap.put("filePathNotContainsText", filePathNotContainsTextField.getText().trim());
                 paramsMap.put("filePathSupportRegex", filePathSupportRegex);
@@ -325,55 +362,58 @@ public class FolderAndFileOperate extends GuiJPanel {
                 paramsMap.put("folderPathContainsText", folderPathContainsTextField.getText().trim());
                 paramsMap.put("folderPathNotContainsText", folderPathNotContainsTextField.getText().trim());
                 paramsMap.put("folderPathSupportRegex", folderPathSupportRegex);
-                // 最终Search到的File，当查找类型为'重复文件查找'，files最后长度为0，结果保存在FileUtils.repeatFilesProp及FileUtils.repeatFilesMap中
+                paramsMap.put("folderHierarchyText", folderHierarchyField.getText().trim());
+                // 最终Search到的File，当查找类型为'重复文件查找'，files最后长度为0，结果保存在FileUtils.repeatFilesSet及FileUtils.repeatFilesMap中
                 List<File> files = FileUtils.getAllSubFiles(path, paramsMap);
-                int cnt_action = 0;
-                if (curType.equals(type_repeatSearch)) {
+                int cntAction = 0;
+                if (curType.equals(typeRepeatSearch)) {
                     List<File> repeatFiles = null;
                     long cnt = 0;
-                    int groupCnt = FileUtils.repeatFilesProp.size();
-                    int size_cnt = 0;
+                    int groupCnt = FileUtils.repeatFilesSet.size();
+                    int sizeCnt = 0;
                     int f = 0;
                     resultTextArea
-                            .append("查找方法：取出有相同大小的所有文件，比较文件大小以及前2048Byte的内容的MD5值是否一样，\n                 如果两者相同，则认为重复，否则认为不重复，有较小的误差率。\n\n\n");
-                    for (String prop : FileUtils.repeatFilesProp) {
+                            .append("查找方法：取出有相同大小的所有文件，比较文件大小以及前2048Byte的内容的MD5值是否一样，\n         如果两者相同，则认为重复，否则认为不重复，有较小的误差率。\n\n\n");
+                    for (String prop : FileUtils.repeatFilesSet) {
                         resultTextArea.append("第" + (++f) + "组：\n");
-                        repeatFiles = FileUtils.repeatFilesMap.get(prop);
+                        repeatFiles = FileUtils.searchRepeatSameSizeFilesMap.get(prop);
                         cnt += repeatFiles.size();
                         Integer[] cntArr = printPropAndAction(curAction, repeatFiles);
-                        cnt_action += cntArr[0];
-                        size_cnt += cntArr[5];
+                        cntAction += cntArr[0];
+                        sizeCnt += cntArr[5];
                     }
                     resultTextArea.append("\n\nCount repeat group: " + groupCnt + ", files: " + cnt + ", Size: "
-                            + size_cnt + "M");
-                    FileUtils.repeatFilesMap.clear();
-                    FileUtils.repeatFilesMap = null;
-                    FileUtils.repeatFilesProp.clear();
-                    FileUtils.repeatFilesProp = null;
-                } else if (curType.equals(type_sameNameSearch)) {
+                            + sizeCnt + "M");
+                    FileUtils.searchRepeatSizeFilesMap.clear();
+                    FileUtils.searchRepeatSizeFilesMap = null;
+                    FileUtils.searchRepeatSameSizeFilesMap.clear();
+                    FileUtils.searchRepeatSameSizeFilesMap = null;
+                    FileUtils.repeatFilesSet.clear();
+                    FileUtils.repeatFilesSet = null;
+                } else if (curType.equals(typeSameNameSearch)) {
                     List<File> sameNameFiles = null;
                     long cnt = 0;
-                    int groupCnt = FileUtils.sameNameFilesProp.size();
-                    int size_cnt = 0;
+                    int groupCnt = FileUtils.sameNameFilesSet.size();
+                    int sizeCnt = 0;
                     int f = 0;
-                    resultTextArea.append("查找方法：比较文件名，不比较后缀名，查找相同文件名称的文件。\n\n\n");
-                    for (String prop : FileUtils.sameNameFilesProp) {
+                    resultTextArea.append("查找方法：比较文件名及文件类型，查找相同文件名称的文件。\n\n\n");
+                    for (String prop : FileUtils.sameNameFilesSet) {
                         resultTextArea.append("第" + (++f) + "组：\n");
-                        sameNameFiles = FileUtils.sameNameFilesMap.get(prop);
+                        sameNameFiles = FileUtils.searchSameNameFilesMap.get(prop);
                         cnt += sameNameFiles.size();
                         Integer[] cntArr = printPropAndAction(curAction, sameNameFiles);
-                        cnt_action += cntArr[0];
-                        size_cnt += cntArr[5];
+                        cntAction += cntArr[0];
+                        sizeCnt += cntArr[5];
                     }
                     resultTextArea.append("\n\nCount same name group: " + groupCnt + ", files: " + cnt + ", Size: "
-                            + size_cnt + "M");
-                    FileUtils.sameNameFilesMap.clear();
-                    FileUtils.sameNameFilesMap = null;
-                    FileUtils.sameNameFilesProp.clear();
-                    FileUtils.sameNameFilesProp = null;
+                            + sizeCnt + "M");
+                    FileUtils.searchSameNameFilesMap.clear();
+                    FileUtils.searchSameNameFilesMap = null;
+                    FileUtils.sameNameFilesSet.clear();
+                    FileUtils.sameNameFilesSet = null;
                 } else {
                     Integer[] cntArr = printPropAndAction(curAction, files);
-                    cnt_action += cntArr[0];
+                    cntAction += cntArr[0];
                     resultTextArea.append("\n\nCount: " + files.size() + ", Size: " + cntArr[5] + "M, folders: "
                             + cntArr[1] + ", files: " + cntArr[2] + ", hidden folders: " + cntArr[3]
                             + ", hidden files: " + cntArr[4]);
@@ -381,33 +421,30 @@ public class FolderAndFileOperate extends GuiJPanel {
                 files.clear();
                 files = null;
                 if (curAction.equals(action_copyFile)) {
-                    resultTextArea.append(", Count Copy files: " + cnt_action);
+                    resultTextArea.append(", Count Copy files: " + cntAction);
                 } else if (curAction.equals(action_cutFile)) {
-                    resultTextArea.append(", Count Cut files: " + cnt_action);
+                    resultTextArea.append(", Count Cut files: " + cntAction);
+                } else if (curAction.equals(action_renameFile)) {
+                    resultTextArea.append(", Count Rename files: " + cntAction);
                 } else if (curAction.equals(action_deleteFile)) {
-                    resultTextArea.append(", Count Delete files: " + cnt_action);
+                    resultTextArea.append(", Count Delete files: " + cntAction);
+                } else if (curAction.equals(action_deleteRepeatFile)) {
+                    resultTextArea.append(", Count Delete Repeat files: " + cntAction);
                 } else if (curAction.equals(action_deleteBlankFolder)) {
-                    resultTextArea.append(", Count Delete blank folders: " + cnt_action);
+                    resultTextArea.append(", Count Delete Blank folders: " + cntAction);
                 }
-                resultTextArea.append(". Cost time:" + (new Date().getTime() - curTime) / 1000.0 + "s.");
+                resultTextArea.append(". Cost time:" + (System.currentTimeMillis() - curTime) / 1000.0 + "s.");
+
                 System.gc();
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 resultTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
-        // 路径选择控件
-        search_fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 仅可选择文件夹
+        // 路径选择控件，仅可选择文件夹
+        searchFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooPanel.add(buttonFlowPanel, BorderLayout.EAST);
         inputPanel.add(fileChooPanel);
 
@@ -416,9 +453,10 @@ public class FolderAndFileOperate extends GuiJPanel {
         // 查找类型
         addJLabel(conditionPanel, " 查找类型: ", GuiUtils.font14_cn);
         addJComboBox(conditionPanel, types, GuiUtils.font13_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 curType = ((JComboBox) event.getSource()).getSelectedItem().toString();
-                if (curType.equals(type_blankSearch)) {
+                if (curType.equals(typeBlankSearch)) {
                     fileSizeFromTextField.setText("");
                     fileSizeFromTextField.setEnabled(false);
                     fileSizeUnitFromBox.setEnabled(false);
@@ -431,6 +469,11 @@ public class FolderAndFileOperate extends GuiJPanel {
                     fileSizeToTextField.setEnabled(true);
                     fileSizeUnitToBox.setEnabled(true);
                 }
+                if (curType.equals(typeRepeatSearch) || curType.equals(typeSameNameSearch)) {
+                    repeatSameSuffixCheckBox.setEnabled(true);
+                } else {
+                    repeatSameSuffixCheckBox.setEnabled(false);
+                }
             }
         });
 
@@ -438,14 +481,16 @@ public class FolderAndFileOperate extends GuiJPanel {
 
         // 常见文件类型下拉框
         addJComboBox(conditionPanel, fileTypeNames, GuiUtils.font13_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
-                curFileType = fileTypesMap.get(((JComboBox) event.getSource()).getSelectedItem().toString());
+                searchFileTypeTextField.setText(fileTypesMap.get(((JComboBox) event.getSource()).getSelectedItem().toString()));
             }
         });
 
         addJLabel(conditionPanel, " 包括:", GuiUtils.font14_cn);
         // 是否包括文件JCheckBox
         addJCheckBox(conditionPanel, "文件", true, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 containsFile = checkBox.isSelected();
@@ -453,6 +498,7 @@ public class FolderAndFileOperate extends GuiJPanel {
         });
         // 是否包括文件夹JCheckBox
         addJCheckBox(conditionPanel, "文件夹", true, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 containsFolder = checkBox.isSelected();
@@ -460,6 +506,7 @@ public class FolderAndFileOperate extends GuiJPanel {
         });
         // 是否包括隐藏文件(夹)JCheckBox
         addJCheckBox(conditionPanel, "隐藏文件(夹)", true, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 containsHidden = checkBox.isSelected();
@@ -467,6 +514,7 @@ public class FolderAndFileOperate extends GuiJPanel {
         });
         // 是否包括隐藏文件(夹)JCheckBox
         addJCheckBox(conditionPanel, "非隐藏文件(夹)", true, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 containsNotHidden = checkBox.isSelected();
@@ -478,6 +526,7 @@ public class FolderAndFileOperate extends GuiJPanel {
         addJLabel(viewPropAndActionPanel, " 操作类型: ", GuiUtils.font14_cn);
         // 操作类型下拉框
         addJComboBox(viewPropAndActionPanel, actions, GuiUtils.font13_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 curAction = ((JComboBox) event.getSource()).getSelectedItem().toString();
                 if (!curAction.equals(action_onlySearch)) {
@@ -487,25 +536,26 @@ public class FolderAndFileOperate extends GuiJPanel {
                 }
                 if (curAction.equals(action_copyFile) || curAction.equals(action_cutFile)) {
                     actionTextField.setEnabled(true);
-                    action_chooseButton.setEnabled(true);
+                    actionChooseButton.setEnabled(true);
                 } else {
                     actionTextField.setText("");
                     actionTextField.setEnabled(false);
-                    action_chooseButton.setEnabled(false);
+                    actionChooseButton.setEnabled(false);
                 }
             }
         });
         addJTextField(viewPropAndActionPanel, actionTextField, GuiUtils.font14_un);
         actionTextField.setEnabled(false);
-        // 路径选择控件
-        action_fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); // 仅可选择文件夹
-        action_chooseButton.addActionListener(buttonBrowseListener(action_fileChooser, actionTextField));
-        action_chooseButton.setEnabled(false);
-        viewPropAndActionPanel.add(action_chooseButton);
+        // 路径选择控件，仅可选择文件夹
+        actionFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        actionChooseButton.addActionListener(buttonBrowseListener(actionFileChooser, actionTextField));
+        actionChooseButton.setEnabled(false);
+        viewPropAndActionPanel.add(actionChooseButton);
 
         addJLabel(viewPropAndActionPanel, " 显示:", GuiUtils.font14_cn);
         // 是否显示文件(夹)完整路径
         addJCheckBox(viewPropAndActionPanel, "完整路径", true, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 viewFullPathProp = checkBox.isSelected();
@@ -513,6 +563,7 @@ public class FolderAndFileOperate extends GuiJPanel {
         });
         // 是否显示文件大小JCheckBox
         addJCheckBox(viewPropAndActionPanel, "大小", true, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 viewSizeCkProp = checkBox.isSelected();
@@ -520,6 +571,7 @@ public class FolderAndFileOperate extends GuiJPanel {
         });
         JComboBox viewSizeCkPropUnitBox = createFileSizeUnitBox(GuiUtils.font12_cn);
         viewSizeCkPropUnitBox.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 viewSizeCkPropUnit = ((JComboBox) event.getSource()).getSelectedItem().toString();
             }
@@ -527,6 +579,7 @@ public class FolderAndFileOperate extends GuiJPanel {
         viewPropAndActionPanel.add(viewSizeCkPropUnitBox);
         // 是否显示修改时间
         addJCheckBox(viewPropAndActionPanel, "修改时间", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 viewModifyTimeProp = checkBox.isSelected();
@@ -534,6 +587,7 @@ public class FolderAndFileOperate extends GuiJPanel {
         });
         // 是否显示文件大小JCheckBox
         addJCheckBox(viewPropAndActionPanel, "隐藏属性", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 JCheckBox checkBox = (JCheckBox) event.getSource();
                 viewHiddenProp = checkBox.isSelected();
@@ -541,6 +595,7 @@ public class FolderAndFileOperate extends GuiJPanel {
         });
         // 展开/收缩高级(条件)按钮
         addJButton(viewPropAndActionPanel, "高级", "", GuiUtils.font12_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 advanceConditionPanel.setVisible(!advanceConditionPanel.isVisible());
                 getContextPanel().revalidate();
@@ -551,9 +606,19 @@ public class FolderAndFileOperate extends GuiJPanel {
         // 高级(条件)及输出面板，使用边界布局，North为高级(条件)，Center为输出
         JPanel advanceAndResultPanel = new JPanel(new BorderLayout());
         // 高级(条件
-        advanceConditionPanel = new JPanel(new GridLayout(4, 1));
+        advanceConditionPanel = new JPanel(new GridLayout(5, 1));
         advanceConditionPanel.setVisible(false);
         advanceAndResultPanel.add(advanceConditionPanel, BorderLayout.NORTH);
+
+        // 文件类型条件
+        JPanel fileTypeConditionPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        addJLabel(fileTypeConditionPanel, " 文件类型: ", GuiUtils.font14_cn);
+        fileTypeConditionPanel.add(searchFileTypeTextField);
+        // 是否相同文件类型
+        fileTypeConditionPanel.add(repeatSameSuffixCheckBox);
+        repeatSameSuffixCheckBox.setEnabled(false);
+        advanceConditionPanel.add(fileTypeConditionPanel);
+
         // 大小条件、时间条件
         JPanel fileSizeTimePanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         addJLabel(fileSizeTimePanel, " 文件大小: ", GuiUtils.font14_cn);
@@ -562,10 +627,12 @@ public class FolderAndFileOperate extends GuiJPanel {
         addJLabel(fileSizeTimePanel, "-", GuiUtils.font14_cn);
         fileSizeTimePanel.add(fileSizeToTextField);
         fileSizeTimePanel.add(fileSizeUnitToBox);
-        addJLabel(fileSizeTimePanel, "   修改时间: ", GuiUtils.font14_cn);
+        addJLabel(fileSizeTimePanel, "   修改时间:", GuiUtils.font14_cn);
         fileSizeTimePanel.add(modifyTimeFromTextField);
         addJLabel(fileSizeTimePanel, "--", GuiUtils.font14_cn);
         fileSizeTimePanel.add(modifyTimeToTextField);
+        addJLabel(fileSizeTimePanel, "   遍历层级:", GuiUtils.font14_cn);
+        addJTextField(fileSizeTimePanel, folderHierarchyField, GuiUtils.font14_cn);
         advanceConditionPanel.add(fileSizeTimePanel);
 
         // 文件(夹)路径包含(不包含)字符
@@ -573,11 +640,12 @@ public class FolderAndFileOperate extends GuiJPanel {
         addJLabel(filePathContainsPanel, " 文件/夹路径包含:", GuiUtils.font14_cn);
         filePathContainsTextField = new JTextField(24);
         addJTextField(filePathContainsPanel, filePathContainsTextField, GuiUtils.font14_un);
-        addJLabel(filePathContainsPanel, "  文件/夹路径不包含:", GuiUtils.font14_cn);
+        addJLabel(filePathContainsPanel, " 文件/夹路径不包含:", GuiUtils.font14_cn);
         filePathNotContainsTextField = new JTextField(24);
         addJTextField(filePathContainsPanel, filePathNotContainsTextField, GuiUtils.font14_un);
         // 是否支持正则
         addJCheckBox(filePathContainsPanel, "支持正则", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 filePathSupportRegex = ((JCheckBox) event.getSource()).isSelected();
             }
@@ -589,11 +657,12 @@ public class FolderAndFileOperate extends GuiJPanel {
         addJLabel(fileNameContainsPanel, " 文件名包含字符: ", GuiUtils.font14_cn);
         fileNameContainsTextField = new JTextField(24);
         addJTextField(fileNameContainsPanel, fileNameContainsTextField, GuiUtils.font14_un);
-        addJLabel(fileNameContainsPanel, "  文件名不包含字符: ", GuiUtils.font14_cn);
+        addJLabel(fileNameContainsPanel, " 文件名不包含字符: ", GuiUtils.font14_cn);
         fileNameNotContainsTextField = new JTextField(24);
         addJTextField(fileNameContainsPanel, fileNameNotContainsTextField, GuiUtils.font14_un);
         // 是否支持正则
         addJCheckBox(fileNameContainsPanel, "支持正则", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 fileNameSupportRegex = ((JCheckBox) event.getSource()).isSelected();
             }
@@ -605,11 +674,12 @@ public class FolderAndFileOperate extends GuiJPanel {
         addJLabel(folderPathContainsPanel, " 文件夹路径包含: ", GuiUtils.font14_cn);
         folderPathContainsTextField = new JTextField(24);
         addJTextField(folderPathContainsPanel, folderPathContainsTextField, GuiUtils.font14_un);
-        addJLabel(folderPathContainsPanel, "  文件夹路径不包含: ", GuiUtils.font14_cn);
+        addJLabel(folderPathContainsPanel, " 文件夹路径不包含: ", GuiUtils.font14_cn);
         folderPathNotContainsTextField = new JTextField(24);
         addJTextField(folderPathContainsPanel, folderPathNotContainsTextField, GuiUtils.font14_un);
         // 是否支持正则
         addJCheckBox(folderPathContainsPanel, "支持正则", false, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 folderPathSupportRegex = ((JCheckBox) event.getSource()).isSelected();
             }
@@ -628,23 +698,73 @@ public class FolderAndFileOperate extends GuiJPanel {
      * 查找到隐藏文件夹总数，查找到隐藏文件总数.
      */
     private Integer[] printPropAndAction(String action, List<File> files) {
-        int cnt_action = 0;
-        int cnt_folders = 0;
-        int cnt_files = 0;
-        int cnt_folders_hidden = 0;
-        int cnt_files_hidden = 0;
-        long cnt_length = 0;
+        int cntAction = 0;
+        int cntFolders = 0;
+        int cntFiles = 0;
+        int cntFoldersHidden = 0;
+        int cntFilesHidden = 0;
+        long cntLength = 0;
+        // 查找重复/同名文件，并删除重复文件只保留最新一个文件
+        boolean deleteRepeat = (curType.equals(typeRepeatSearch) || curType.equals(typeSameNameSearch)) && action.equals(action_deleteRepeatFile);
+        if (deleteRepeat) {
+            Collections.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    return o2.lastModified() > o1.lastModified() ? 1 : -1;
+                }
+            });
+        }
+        // 文件重命名
+        boolean renameFile = curType.equals(typeSearch) && curAction.equals(action_renameFile);
+        Map<File, String> newNameMap = null;
+        if (renameFile) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Map<String, Map<String, List<File>>> dirDateFiles = new HashMap<String, Map<String, List<File>>>();
+            newNameMap = new HashMap<File, String>();
+            for (File file : files) {
+                if (!file.isDirectory()) {
+                    String dir = file.getParentFile().getPath();
+                    if (dirDateFiles.get(dir) == null) {
+                        dirDateFiles.put(dir, new HashMap<String, List<File>>());
+                    }
+                    String date = dateFormat.format(new Date(file.lastModified()));
+                    if (dirDateFiles.get(dir).get(date) == null) {
+                        dirDateFiles.get(dir).put(date, new ArrayList<File>());
+                    }
+                    dirDateFiles.get(dir).get(date).add(file);
+                }
+            }
+            for (Map.Entry<String, Map<String, List<File>>> entry : dirDateFiles.entrySet()) {
+                for (Map.Entry<String, List<File>> fEntry : entry.getValue().entrySet()) {
+                    List<File> fFiles = fEntry.getValue();
+                    Collections.sort(fFiles, new Comparator<File>() {
+                        @Override
+                        public int compare(File o1, File o2) {
+                            return o2.lastModified() < o1.lastModified() ? 1 : -1;
+                        }
+                    });
+                    int fi = fFiles.size();
+                    for (int i = 0; i < fi; i++) {
+                        File file = fFiles.get(i);
+                        int l = file.getName().lastIndexOf(".");
+                        String fileType = l > 0 ? file.getName().substring(l) : "";
+                        newNameMap.put(file, fEntry.getKey() + (fi == 1 ? "" : (" " + (i + 1))) + fileType);
+                    }
+                }
+            }
+        }
+        int fi = 0;
         for (File file : files) {
             if (file.isDirectory()) {
-                cnt_folders++;
+                cntFolders++;
                 if (file.isHidden()) {
-                    cnt_folders_hidden++;
+                    cntFoldersHidden++;
                 }
             } else {
-                cnt_files++;
-                cnt_length += file.length();
+                cntFiles++;
+                cntLength += file.length();
                 if (file.isHidden()) {
-                    cnt_files_hidden++;
+                    cntFilesHidden++;
                 }
             }
             if (viewFullPathProp) {
@@ -652,49 +772,67 @@ public class FolderAndFileOperate extends GuiJPanel {
             } else {
                 resultTextArea.append(file.getName());
             }
+            if (renameFile && !file.isDirectory()) {
+                String newName = newNameMap.get(file);
+                boolean rs = file.renameTo(new File(file.getParentFile().getPath() + "/" + newName));
+                resultTextArea.append("   Rename: ");
+                if (rs) {
+                    cntAction++;
+                    resultTextArea.append(newName);
+                }
+            }
             if (viewSizeCkProp && !file.isDirectory()) {
                 resultTextArea.append("   Size: ");
                 if (viewSizeCkPropUnit.equals(GuiUtils.FileSize_M)) {
-                    resultTextArea.append(format_double_3.format(file.length() / 1024.0 / 1024.0) + "M");
+                    resultTextArea.append(formatDouble3.format(file.length() / 1024.0 / 1024.0) + "M");
                 } else if (viewSizeCkPropUnit.equals(GuiUtils.FileSize_KB)) {
-                    resultTextArea.append(format_double_3.format(file.length() / 1024.0) + "KB");
+                    resultTextArea.append(formatDouble3.format(file.length() / 1024.0) + "KB");
                 } else if (viewSizeCkPropUnit.equals(GuiUtils.FileSize_Byte)) {
                     resultTextArea.append(file.length() + "Byte");
                 } else if (viewSizeCkPropUnit.equals(GuiUtils.FileSize_G)) {
-                    resultTextArea.append(format_double_6.format(file.length() / 1024.0 / 1024.0 / 1024.0) + "G");
+                    resultTextArea.append(formatDouble6.format(file.length() / 1024.0 / 1024.0 / 1024.0) + "G");
                 }
             }
             if (viewModifyTimeProp) {
-                resultTextArea.append("   ModifyTime: " + format_yyyyMMddHHmmss.format(new Date(file.lastModified())));
+                resultTextArea.append("   ModifyTime: " + new SimpleDateFormat(FORMATTER_YYYYMMDDHHMMSS).format(new Date(file.lastModified())));
             }
             if (viewHiddenProp) {
                 resultTextArea.append("   Hidden: " + (file.isHidden() ? "Y" : "N"));
             }
+            // 删除重复文件只保留最新一个文件
+            if (deleteRepeat && fi != 0) {
+                file.delete();
+                cntAction++;
+                resultTextArea.append("   Deleted");
+            }
             resultTextArea.append("\n");
-            if (!curAction.equals(action_onlySearch)) {
+            if (!action.equals(action_onlySearch)) {
                 if (!file.isDirectory()) {
-                    if (curAction.equals(action_copyFile)) {
+                    if (action.equals(action_copyFile)) {
                         // 复制文件
                         copyFile(file);
-                        cnt_action++;
-                    } else if (curAction.equals(action_cutFile)) {
-                        // 剪切文件
-                        copyFile(file); // 先复制文件
-                        file.delete(); // 然后删除文件
-                        cnt_action++;
-                    } else if (curAction.equals(action_deleteFile)) {
-                        file.delete(); // 删除文件
-                        cnt_action++;
+                        cntAction++;
+                    } else if (action.equals(action_cutFile)) {
+                        // 剪切文件，先复制文件
+                        copyFile(file);
+                        // 然后删除文件
+                        file.delete();
+                        cntAction++;
+                    } else if (action.equals(action_deleteFile)) {
+                        // 删除文件
+                        file.delete();
+                        cntAction++;
                     }
-                } else if (curAction.equals(action_deleteBlankFolder) && file.listFiles() != null
+                } else if (action.equals(action_deleteBlankFolder) && file.listFiles() != null
                         && file.listFiles().length == 0) {
                     file.delete(); // 删除空文件夹
-                    cnt_action++;
+                    cntAction++;
                 }
             }
+            fi += 1;
         }
-        return new Integer[]{cnt_action, cnt_folders, cnt_files, cnt_folders_hidden, cnt_files_hidden,
-                (int) (cnt_length / 1024 / 1024)};
+        return new Integer[]{cntAction, cntFolders, cntFiles, cntFoldersHidden, cntFilesHidden,
+                (int) (cntLength / 1024 / 1024)};
     }
 
     /**

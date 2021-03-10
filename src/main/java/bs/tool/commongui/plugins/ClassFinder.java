@@ -1,19 +1,19 @@
 package bs.tool.commongui.plugins;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import bs.tool.commongui.utils.FileUtils;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import bs.util.io.PropertiesUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -21,7 +21,7 @@ import java.util.zip.ZipFile;
 /**
  * Java类查找.
  */
-public class ClassFinder extends GuiJPanel {
+public class ClassFinder extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -107,7 +107,8 @@ public class ClassFinder extends GuiJPanel {
         addJLabel(secondFlowPanel, " ", GuiUtils.font14_cn);
         // 查找按钮
         searchButton = createJButton("查找", "", GuiUtils.font14b_cn);
-        searchButton.addMouseListener(new MouseListener() {
+        searchButton.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String className = searchClassTextField.getText().trim().toLowerCase();
                 if (className.length() == 0) {
@@ -165,27 +166,21 @@ public class ClassFinder extends GuiJPanel {
                 searchButton.setEnabled(true);
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 resultTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
         secondFlowPanel.add(searchButton);
-        // 查找路径选择控件
-        searchPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
+        // 查找路径选择控件，可选择文件/文件夹
+        searchPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         searchPathChooser.setFileFilter(new FileFilter() {
+            @Override
             public String getDescription() {
                 return compressFileTypes + ",文件夹";
             }
 
+            @Override
             public boolean accept(File file) {
                 if (file.isDirectory()) {
                     return true;

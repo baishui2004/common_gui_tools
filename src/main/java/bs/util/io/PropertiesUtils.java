@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * 读取属性文件属性.
@@ -24,8 +22,8 @@ public class PropertiesUtils {
      * @return <code>Properties</code> 属性
      * @throws IOException IO Exception
      */
-    public static Properties getProperties(String path) throws IOException {
-        Properties properties = new Properties();
+    public static LinkedProperties getProperties(String path) throws IOException {
+        LinkedProperties properties = new LinkedProperties();
         InputStream in = null;
         try {
             in = new FileInputStream(new File(path));
@@ -45,8 +43,8 @@ public class PropertiesUtils {
      * @return <code>Properties</code> 属性
      * @throws IOException IO Exception
      */
-    public static Properties getProperties(InputStream in) throws IOException {
-        Properties properties = new Properties();
+    public static LinkedProperties getProperties(InputStream in) throws IOException {
+        LinkedProperties properties = new LinkedProperties();
         properties.load(in);
         return properties;
     }
@@ -58,8 +56,8 @@ public class PropertiesUtils {
      * @return <code>Map<String, String></code> 属性的Map集合
      * @throws IOException IO Exception
      */
-    public static Map<String, String> getPropertiesMap(String path) throws IOException {
-        Properties properties = getProperties(path);
+    public static LinkedHashMap<String, String> getPropertiesMap(String path) throws IOException {
+        LinkedProperties properties = getProperties(path);
         return getPropertiesMap(properties);
     }
 
@@ -70,8 +68,8 @@ public class PropertiesUtils {
      * @return <code>Map<String, String></code> 属性的Map集合
      * @throws IOException IO Exception
      */
-    public static Map<String, String> getPropertiesMap(InputStream in) throws IOException {
-        Properties properties = getProperties(in);
+    public static LinkedHashMap<String, String> getPropertiesMap(InputStream in) throws IOException {
+        LinkedProperties properties = getProperties(in);
         return getPropertiesMap(properties);
     }
 
@@ -81,12 +79,11 @@ public class PropertiesUtils {
      * @param properties 属性
      * @return <code>Map<String, String></code> 属性的Map集合
      */
-    public static Map<String, String> getPropertiesMap(Properties properties) {
-        Set<String> keySets = properties.stringPropertyNames();
-        Object[] keys = keySets.toArray();
-        Map<String, String> map = new LinkedHashMap<String, String>();
-        for (int i = 0; i < keys.length; i++) {
-            String key = (String) keys[i];
+    public static LinkedHashMap<String, String> getPropertiesMap(LinkedProperties properties) {
+        Enumeration<Object> keys = properties.keys();
+        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        while (keys.hasMoreElements()) {
+            String key = (String) keys.nextElement();
             map.put(key, properties.getProperty(key));
         }
         return map;

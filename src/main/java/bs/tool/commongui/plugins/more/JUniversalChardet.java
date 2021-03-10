@@ -1,9 +1,10 @@
 package bs.tool.commongui.plugins.more;
 
-import bs.tool.commongui.GuiJPanel;
+import bs.tool.commongui.AbstractGuiJPanel;
 import bs.tool.commongui.GuiUtils;
 import bs.tool.commongui.utils.FileUtils;
 import bs.tool.commongui.utils.SearchFileNameParams;
+import bs.tool.commongui.utils.SimpleMouseListener;
 import bs.util.io.PropertiesUtils;
 import org.mozilla.universalchardet.UniversalDetector;
 
@@ -12,18 +13,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * 文本编码识别.
  */
-public class JUniversalChardet extends GuiJPanel {
+public class JUniversalChardet extends AbstractGuiJPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -87,7 +87,8 @@ public class JUniversalChardet extends GuiJPanel {
                 buttonBrowseListener(detectPathChooser, detectPathTextField));
         // 探测按钮
         detectButton = createJButton("探测", "", GuiUtils.font14b_cn);
-        detectButton.addMouseListener(new MouseListener() {
+        detectButton.addMouseListener(new SimpleMouseListener() {
+            @Override
             public void mouseReleased(MouseEvent event) {
                 String path = detectPathTextField.getText().trim();
                 File file = new File(path);
@@ -132,22 +133,14 @@ public class JUniversalChardet extends GuiJPanel {
                 detectButton.setEnabled(true);
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 resultTextArea.setText("");
             }
-
-            public void mouseExited(MouseEvent e) {
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseClicked(MouseEvent e) {
-            }
         });
         buttonFlowPanel.add(detectButton);
-        // 探测路径选择控件
-        detectPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); // 可选择文件/文件夹
+        // 探测路径选择控件，可选择文件/文件夹
+        detectPathChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         fileChooAndDetectPanel.add(buttonFlowPanel, BorderLayout.EAST);
         inputPanel.add(fileChooAndDetectPanel);
 
@@ -182,6 +175,7 @@ public class JUniversalChardet extends GuiJPanel {
         addJTextField(advancePanel, fileNameNotContainsTextField, GuiUtils.font14_un);
         // 是否支持正则
         addJCheckBox(advancePanel, "支持正则", true, GuiUtils.font14_cn, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 fileNameSupportRegex = ((JCheckBox) event.getSource()).isSelected();
             }
