@@ -5,7 +5,6 @@ Version 1.5    2021-3-10
 3，增加插件：利息利率计算器Interest Calculator，包括：贷款利率计算、等额本金与等额本息比较计算、提前还款计算、分期名义利率真实利率计算；
 4，增加插件：随机密码生成Password Generator，使用类库：https://github.com/vt-middleware/passay；
 5，优化内容：Mac系统上展示程序名称；Mac系统上暂改使用Monaco字体；
-6，优化大小：插件JODConverter Visual及Webview Simple Webview的Maven依赖改为provided，如需使用这2个插件，需修改pom重新打包；
 
 
 
