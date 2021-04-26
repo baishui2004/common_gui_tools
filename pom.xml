@@ -13,7 +13,7 @@
         <cgt-file.name>common_gui_tools</cgt-file.name>
         <commons-codec.version>1.5</commons-codec.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <commons-io.version>1.4</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <jnotify-0.94_improve.path>${project.basedir}/src/main/sources/lib/jnotify-0.94_improve-1.0.jar
         </jnotify-0.94_improve.path>
         <ZHConverter.path>${project.basedir}/src/main/sources/lib/ZHConverter.jar
